@@ -7,6 +7,7 @@ import type { Shape } from 'konva/lib/Shape'
 import { LayersContext } from '../../../providers/LayersProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { AnchorProps, PointAnchorProps } from './interfaces'
+import { AxisType } from '../../Grid/interfaces'
 
 const PointAnchor = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }: PointAnchorProps) => {
   const { setIsAnchor } = useContext(UIContext)
@@ -55,8 +56,26 @@ const PointAnchor = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }
   )
 }
 
-const Anchor = ({ anchorXY, curves, getCell, points, setAnchorXY }: AnchorProps) => {
-  const { isAnchor } = useContext(UIContext)
+const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setAnchorXY }: AnchorProps) => {
+  const { isAnchor, isDragging } = useContext(UIContext)
+
+  // move point
+  const movePoint = (context: Context, pointCurveInit: number[], position: number) => {
+    if (isDragging && currentPoint === position) {
+      context.moveTo(pointXY.x, pointXY.y)
+    } else {
+      context.moveTo(pointCurveInit[0], pointCurveInit[1])
+    }
+  }
+
+  // create line
+  const createLine = (context: Context, curvePos: AxisType, anchorPoints = false) => {
+    if (isAnchor && anchorPoints) {
+      context.lineTo(anchorXY.x, anchorXY.y)
+    } else {
+      context.lineTo(curvePos[0], curvePos[1])
+    }
+  }
 
   // draw line
   const drawLine = (context: Context, shape: Shape) => {
@@ -78,22 +97,16 @@ const Anchor = ({ anchorXY, curves, getCell, points, setAnchorXY }: AnchorProps)
             const curvePos = getCell(curve.curve[0], curve.curve[1])
 
             if (curvePos) {
-              context.moveTo(pointCurveInit[0], pointCurveInit[1])
+              const anchorPointInit = anchorXY.curve?.pointInit === pointInit.position
+              const anchorPointEnd = anchorXY.curve?.pointEnd === pointEnd.position
 
-              if (isAnchor && anchorXY.curve?.pointInit === pointInit.position && anchorXY.curve.pointEnd === pointEnd.position) {
-                context.lineTo(anchorXY.x, anchorXY.y)
-                console.info(anchorXY)
-              } else {
-                context.lineTo(curvePos[0], curvePos[1])
-              }
+              // init point
+              movePoint(context, pointCurveInit, pointInit.position)
+              createLine(context, curvePos, anchorPointInit && anchorPointEnd)
 
-              context.moveTo(pointCurveEnd[0], pointCurveEnd[1])
-
-              if (isAnchor && anchorXY.curve?.pointInit === pointInit.position && anchorXY.curve.pointEnd === pointEnd.position) {
-                context.lineTo(anchorXY.x, anchorXY.y)
-              } else {
-                context.lineTo(curvePos[0], curvePos[1])
-              }
+              // end point
+              movePoint(context, pointCurveEnd, pointEnd.position)
+              createLine(context, curvePos, anchorPointInit && anchorPointEnd)
             }
           }
         }

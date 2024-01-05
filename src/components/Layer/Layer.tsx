@@ -90,7 +90,13 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         pointXY={pointXY}
       />
 
-      <Anchor {...props} getCell={getCell} anchorXY={anchorXY} setAnchorXY={setAnchorXY} />
+      <Anchor
+        {...props}
+        anchorXY={anchorXY}
+        getCell={getCell}
+        setAnchorXY={setAnchorXY}
+        pointXY={pointXY}
+      />
 
       <Shape sceneFunc={drawPoints} onClick={onClickPoint} />
 
