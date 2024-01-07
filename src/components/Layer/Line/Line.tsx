@@ -3,10 +3,10 @@ import { Shape as LineKonva } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
+import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { LineProps } from './interfaces'
 import type { CurveType } from '../../../providers/LayersProvider/interfaces'
 import type { PointTypePosition } from '../Point/interfaces'
-import { UIContext } from '../../../providers/UIProvider/UIProvider'
 
 // line
 const Line = ({

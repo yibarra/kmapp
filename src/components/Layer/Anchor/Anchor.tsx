@@ -75,7 +75,6 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
   const createLine = (context: Context, curvePos: AxisType, anchorPoints: boolean) => {
     // console.info('move', anchorPoints)
     if (isAnchor && anchorPoints) {
-      console.info(anchorPoints)
       context.lineTo(anchorXY.x, anchorXY.y)
     } else {
       context.lineTo(curvePos[0], curvePos[1])

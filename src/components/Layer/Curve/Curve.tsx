@@ -29,7 +29,9 @@ const Curve = ({
     const parentCurve = curves.find((cv) => cv.pointEnd === currentPoint)
 
     // draw curves
-    for (const curve of curves) {
+    for (let k = 0; k < curves.length; k++) {
+      const curve = curves[k]
+
       const pointInit = points.find((p) => p.position === curve.pointInit)
       const pointEnd = points.find((p) => p.position === curve.pointEnd)
 
@@ -44,7 +46,7 @@ const Curve = ({
             context.moveTo(pointCurveInit[0], pointCurveInit[1])
           }
 
-          if (isAnchor && parentCurve?.pointEnd === pointEnd.position) {
+          if (isAnchor && anchorXY.index === k) {
             context.quadraticCurveTo(
               anchorXY.x,
               anchorXY.y,
