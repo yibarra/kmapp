@@ -34,6 +34,7 @@ const Point = ({
     setIsDragging(true)
   }
 
+  // on drag move point
   const onDragMovePoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
@@ -81,6 +82,7 @@ const Point = ({
       {...pointsProperties}
       draggable={active}
       onDragStart={onDragStartPoint}
+      onMouseDown={onDragStartPoint}
       onDragMove={onDragMovePoint}
       onDragEnd={onDragEndPoint}
       ref={element}

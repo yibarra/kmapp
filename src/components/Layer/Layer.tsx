@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Group, Shape } from 'react-konva'
 import type { Shape as ShapeType } from 'konva/lib/Shape'
 import type { Context } from 'konva/lib/Context'
@@ -7,11 +7,12 @@ import { GridContext } from '../../providers/GridProvider/GridProvider'
 import { KonvaEventObject } from 'konva/lib/Node'
 import { LayersContext } from '../../providers/LayersProvider'
 import Anchor from './Anchor/Anchor'
+import Curve from './Curve'
 import Line from './Line'
 import Point from './Point'
 import type { LayerProps } from '../../providers/LayersProvider/interfaces'
 import type { PointTypePosition } from './Point/interfaces'
-import { PointAnchorPosition } from './Anchor/interfaces'
+import type { PointAnchorPosition } from './Anchor/interfaces'
 
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const { getCell } = useContext(GridContext)
@@ -58,6 +59,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
         if (valuesPoint) {
           if (valuesPoint[0] === values[0] && valuesPoint[1] === values[1]) {
+            setPointXY({ x: valuesPoint[0], y: valuesPoint[1] })
             updateLayer(props.index, { ...props, currentPoint: index })
           }
         }
@@ -66,7 +68,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   }
 
   // set position point
-  const setPositionPoint = useCallback((posX: number, posY: number, position: number) => {
+  const setPositionPoint = (posX: number, posY: number, position: number) => {
     if (!posX || !posY) {
       return false;
     }
@@ -78,12 +80,19 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         position,
       }, currentPoint
     )
-  }, [currentPoint, updateLayerPoint])
+  }
   
   // render
   return (
     <Group>
       <Line
+        {...props}
+        anchorXY={anchorXY}
+        getCell={getCell}
+        pointXY={pointXY}
+      />
+
+      <Curve
         {...props}
         anchorXY={anchorXY}
         getCell={getCell}

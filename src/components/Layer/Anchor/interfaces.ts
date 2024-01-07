@@ -5,7 +5,7 @@ import type { GridContextProps } from '../../../providers/GridProvider/interface
 import type { PointTypePosition } from '../Point/interfaces'
 
 export interface PointAnchorPosition {
-  curve?: CurveType
+  index?: number
   x: number
   y: number
 }
