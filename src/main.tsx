@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MainProvider>
       <ColorProvider>
-        <GridProvider>
+        <GridProvider size={20}>
           <Main />
         </GridProvider>
       </ColorProvider>

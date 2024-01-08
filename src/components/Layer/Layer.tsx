@@ -15,7 +15,7 @@ import type { PointTypePosition } from './Point/interfaces'
 import type { PointAnchorPosition } from './Anchor/interfaces'
 
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
-  const { getCell } = useContext(GridContext)
+  const { getCell, sizeBox } = useContext(GridContext)
   const { updateLayer, updateLayerPoint } = useContext(LayersContext)
 
   const { active, currentPoint, points, pointsProperties } = props
@@ -35,13 +35,12 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         const y = values[1]
 
         const fill = pointsProperties?.fill ?? '#FFF000'
-        const radius = Number(pointsProperties?.radius) ?? 5
+        const radius = sizeBox / 2
 
         shape.fill(fill ?? '#FFF000')
         context.arc(x, y, radius, 0, 2 * Math.PI, false)
+        context.closePath()
       }
-      
-      context.closePath()
     }
     
     context.fillShape(shape)
@@ -84,7 +83,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   
   // render
   return (
-    <Group>
+    <Group opacity={active ? 1 : 0.1}>
       <Line
         {...props}
         anchorXY={anchorXY}
@@ -99,16 +98,6 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         pointXY={pointXY}
       />
 
-      {active && (
-        <Anchor
-          {...props}
-          anchorXY={anchorXY}
-          getCell={getCell}
-          pointXY={pointXY}
-          setAnchorXY={setAnchorXY}
-        />
-      )}
-
       <Shape sceneFunc={drawPoints} onClick={onClickPoint} />
 
       <Point
@@ -120,6 +109,16 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         setPointXY={setPointXY}
         setPositionPoint={setPositionPoint}
       />
+
+      {active && (
+        <Anchor
+          {...props}
+          anchorXY={anchorXY}
+          getCell={getCell}
+          pointXY={pointXY}
+          setAnchorXY={setAnchorXY}
+        />
+      )}
     </Group>
   )
 }

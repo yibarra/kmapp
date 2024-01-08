@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 
 // Hook
 function UseWindowSize() {
-  const [windowSize, setWindowSize]: any = useState({
-    width: undefined,
-    height: undefined,
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0,
   });
 
   // use effect
@@ -26,6 +26,6 @@ function UseWindowSize() {
   }, [])
 
   return windowSize
-};
+}
 
 export default UseWindowSize

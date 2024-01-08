@@ -5,9 +5,15 @@ export type SizeType = {
   width: number
 }
 
+export type ViewportType = {
+  height: number
+  width: number
+}
+
 export interface MainContextProps {
   loaded: boolean
   setLoaded: Dispatch<SetStateAction<boolean>>
+  viewport: ViewportType
 }
 
 export interface MainProviderProps extends PropsWithChildren {

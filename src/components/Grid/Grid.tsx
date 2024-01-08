@@ -23,11 +23,11 @@ const Grid = ({ createGridBoxes, width, height }: GridProps) => {
   // render
   return <Group>
     <ShapeK
-      fill="#FFFFFF"
+      fill="#FFF"
       listening={false}
-      stroke="#222"
+      stroke="#343434"
       strokeWidth={0.5}
-      opacity={0.05}
+      opacity={0.1}
       sceneFunc={createGridScene}
     />
   </Group>

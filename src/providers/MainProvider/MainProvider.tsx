@@ -3,6 +3,7 @@ import WebFontLoader from 'webfontloader'
 
 import type { MainContextProps, MainProviderProps } from './interfaces'
 import UIProvider from '../UIProvider/UIProvider'
+import UseWindowSize from '../../hooks/useWindowSize'
 
 // main context
 const MainContext = createContext({} as MainContextProps)
@@ -10,6 +11,7 @@ const MainContext = createContext({} as MainContextProps)
 // main provider
 const MainProvider = ({ children }: MainProviderProps) => {
   const [loaded, setLoaded] = useState(false)
+  const viewport = UseWindowSize()
 
   // loading effects.
   useEffect(() => {
@@ -35,6 +37,7 @@ const MainProvider = ({ children }: MainProviderProps) => {
     <MainContext.Provider
       value={{
         loaded,
+        viewport,
         setLoaded,
       }}
     >
