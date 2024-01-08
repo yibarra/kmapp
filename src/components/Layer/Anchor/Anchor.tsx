@@ -95,9 +95,10 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
         anchorXY={anchorXY}
         curves={curves}
         currentPoint={currentPoint}
+        isAnchor={isAnchor}
         getCell={getCell}
-        size={sizeBox / 4}
         points={points}
+        size={sizeBox / 4}
       />
     </Group>
   )

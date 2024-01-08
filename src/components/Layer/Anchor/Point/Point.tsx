@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useRef } from 'react'
 import { Circle } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 
@@ -7,6 +7,9 @@ import { UIContext } from '../../../../providers/UIProvider/UIProvider'
 import type { PointAnchorProps } from './interfaces'
 
 const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }: PointAnchorProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const pointRef = useRef<any>(null)
+
   const { setIsAnchor } = useContext(UIContext)
   const { updateLayerCurvePoint } = useContext(LayersContext)
 
@@ -25,18 +28,14 @@ const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }
   const onDragMovePoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
-    const x = event.evt.clientX
-    const y = event.evt.clientY
-
-    setAnchorXY({ index, x, y })
+    setAnchorXY({ index, x: event.target.x(), y: event.target.y() })
   }
 
   // on drag end point
   const onDragEndPoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
-    const { evt: { clientX, clientY } } = event
-    const pos = getCell(clientX, clientY) ?? [0, 0]
+    const pos = getCell(event.target.x(), event.target.y()) ?? [0, 0]
 
     updateLayerCurvePoint(index, pointInit, pointEnd, [pos[0], pos[1]])
     setIsAnchor(false)
@@ -53,6 +52,7 @@ const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }
       onDragMove={onDragMovePoint}
       onDragStart={onDragStartPoint}
       radius={radius}
+      ref={pointRef}
       x={posXY[0]}
       y={posXY[1]}
     />
