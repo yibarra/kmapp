@@ -4,13 +4,15 @@ import { KonvaEventObject } from 'konva/lib/Node'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
+import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { LayersContext } from '../../../providers/LayersProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
+import type { AxisType } from '../../Grid/interfaces'
 import type { AnchorProps, PointAnchorProps } from './interfaces'
-import { AxisType } from '../../Grid/interfaces'
 
 const PointAnchor = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }: PointAnchorProps) => {
   const { setIsAnchor } = useContext(UIContext)
+  const { sizeBox } = useContext(GridContext)
   const { updateLayerCurvePoint } = useContext(LayersContext)
 
   const posXY = getCell(curve[0], curve[1]) ?? [0, 0]
@@ -46,19 +48,35 @@ const PointAnchor = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }
 
   // render
   return (
-    <Circle
-      draggable
-      fill="#222"
-      onDragEnd={onDragEndPoint}
-      onDragMove={onDragMovePoint}
-      onDragStart={onDragStartPoint}
-      radius={8}
-      x={posXY[0]}
-      y={posXY[1]}
-    />
+    <>
+      <Circle
+        draggable
+        fill="#FFF"
+        stroke="#222"
+        strokeWidth={2}
+        onDragEnd={onDragEndPoint}
+        onDragMove={onDragMovePoint}
+        onDragStart={onDragStartPoint}
+        radius={(sizeBox / 2) - 2}
+        x={posXY[0]}
+        y={posXY[1]}
+      />
+
+      <Circle
+        listening={false}
+        fill="#222"
+        onDragEnd={onDragEndPoint}
+        onDragMove={onDragMovePoint}
+        onDragStart={onDragStartPoint}
+        radius={(sizeBox / 4)}
+        x={posXY[0]}
+        y={posXY[1]}
+      />
+    </>
   )
 }
 
+// anchor
 const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setAnchorXY }: AnchorProps) => {
   const { isAnchor, isDragging } = useContext(UIContext)
 
@@ -73,7 +91,6 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
 
   // create line
   const createLine = (context: Context, curvePos: AxisType, anchorPoints: boolean) => {
-    // console.info('move', anchorPoints)
     if (isAnchor && anchorPoints) {
       context.lineTo(anchorXY.x, anchorXY.y)
     } else {
@@ -101,13 +118,12 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
             const curvePos = getCell(curve.curve[0], curve.curve[1])
 
             if (curvePos) {
-              const anchors = k === anchorXY.index
+              const anchors = (k === anchorXY.index)
 
               // init point
               movePoint(context, pointCurveInit, pointInit.position)
               createLine(context, curvePos, anchors)
 
-              // end point
               movePoint(context, pointCurveEnd, pointEnd.position)
               createLine(context, curvePos, anchors)
             }
@@ -123,8 +139,8 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
   return (
     <Group>
       <ShapeK
-        stroke="#00FF00"
-        strokeWidth={2}
+        stroke="#222"
+        strokeWidth={1}
         listening={false}
         sceneFunc={drawLine}
       />

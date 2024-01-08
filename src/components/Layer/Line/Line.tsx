@@ -68,20 +68,22 @@ const Line = ({
 
           if (element) {
             if (element.pointInit === index && element.pointInit < element.pointEnd) {
-              if (isDragging && currentPoint === item.position) {
+              if (active && isDragging && currentPoint === item.position) {
                 result.push([pointXY.x, pointXY.y, 0])
               } else {
                 result.push([x, y, 0])
               }
             } else {
-              if (isDragging && currentPoint === item.position) {
+              if (active && isDragging && currentPoint === item.position) {
                 result.push([pointXY.x, pointXY.y, 1])
               } else {
                 result.push([x, y, 1])
               }
             }
-          } else {
-            if (isDragging && currentPoint === item.position) {
+          }
+          
+          if (!element) {
+            if (active && isDragging && currentPoint === item.position) {
               result.push([pointXY.x, pointXY.y, 0])
             } else {
               result.push([x, y, 0])
@@ -96,7 +98,7 @@ const Line = ({
 
   // move points
   const movePoints = (points: PointTypePosition[]) => {
-    if (!isDragging) {
+    if (!isDragging || !active) {
       return points
     }
 
@@ -116,9 +118,7 @@ const Line = ({
     context.beginPath()
 
     // draw points
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i]
-
+    for (const line of lines) {
       if (line) {
         const [ x, y, move ] = line
 

@@ -40,13 +40,13 @@ const Curve = ({
         const pointCurveEnd = getCell(pointEnd.x, pointEnd.y) ?? [0, 0]
 
         if (pointCurveInit) {
-          if (isDragging && pointInit.position === currentPoint) {
+          if (active && isDragging && pointInit.position === currentPoint) {
             context.moveTo(pointXY.x, pointXY.y)
           } else {
             context.moveTo(pointCurveInit[0], pointCurveInit[1])
           }
 
-          if (isAnchor && anchorXY.index === k) {
+          if (active && isAnchor && anchorXY.index === k) {
             context.quadraticCurveTo(
               anchorXY.x,
               anchorXY.y,
@@ -54,7 +54,7 @@ const Curve = ({
               pointCurveEnd[1],
             )
           } else {
-            if (isDragging && parentCurve) {
+            if (active && isDragging && parentCurve) {
               if (parentCurve === curve && parentCurve.pointEnd === pointEnd.position) {
                 context.quadraticCurveTo(
                   curve.curve[0],

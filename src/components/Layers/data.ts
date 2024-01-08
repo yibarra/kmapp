@@ -211,7 +211,7 @@ export const dataLayers = {
       "curves": [{
         pointInit: 1,
         pointEnd: 2,
-        curve: [10, 10]
+        curve: [130, 140]
       }]
     }
   ]

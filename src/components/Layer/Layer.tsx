@@ -21,7 +21,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>({ x: 0, y: 0 })
   const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0 })
 
-  const { active = false, currentPoint, points, pointsProperties } = props
+  const { active, currentPoint, points, pointsProperties } = props
 
   // draw points
   const drawPoints = (context: Context, shape: ShapeType) => {
@@ -53,7 +53,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
     const values = getCell(clientX, clientY)
 
-    if (values) {
+    if (values && active) {
       for (const [index, point] of points.entries()) {
         const valuesPoint = getCell(point.x, point.y)
 
@@ -69,7 +69,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
   // set position point
   const setPositionPoint = (posX: number, posY: number, position: number) => {
-    if (!posX || !posY) {
+    if (!posX || !posY || !active) {
       return false;
     }
     
@@ -99,13 +99,15 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         pointXY={pointXY}
       />
 
-      <Anchor
-        {...props}
-        anchorXY={anchorXY}
-        getCell={getCell}
-        setAnchorXY={setAnchorXY}
-        pointXY={pointXY}
-      />
+      {active && (
+        <Anchor
+          {...props}
+          anchorXY={anchorXY}
+          getCell={getCell}
+          setAnchorXY={setAnchorXY}
+          pointXY={pointXY}
+        />
+      )}
 
       <Shape sceneFunc={drawPoints} onClick={onClickPoint} />
 

@@ -61,10 +61,11 @@ const Point = ({
       })
       
       setPositionPoint(posX, posY, currentPoint)
-      setIsDragging(false)
     } else {
       element.current.to({ x, y, duration: 0.2 })
     }
+
+    setIsDragging(false)
   }
 
   // use effect
@@ -80,6 +81,7 @@ const Point = ({
   return (
     <Circle
       {...pointsProperties}
+      listening={active}
       draggable={active}
       onDragStart={onDragStartPoint}
       onMouseDown={onDragStartPoint}
