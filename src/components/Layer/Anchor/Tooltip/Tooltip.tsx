@@ -11,7 +11,7 @@ const Tooltip = ({ anchorXY, curves, getCell, isAnchor = false, size }: TooltipP
   const { viewport } = useContext(MainContext)
 
   // checked
-  const checkedPosX = (posX: number, width: number) => posX + width > viewport.width
+  const checkedPosX = (posX: number, width: number) => (posX + width) > viewport.width
 
   // texts
   const coordinateAnchor = (context: Context, text: string, points: number[], width: number) => {

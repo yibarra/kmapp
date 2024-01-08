@@ -1,10 +1,9 @@
 import { useContext, useState } from 'react'
 import { Group, Shape } from 'react-konva'
-import type { Shape as ShapeType } from 'konva/lib/Shape'
 import type { Context } from 'konva/lib/Context'
+import type { KonvaEventObject } from 'konva/lib/Node'
 
 import { GridContext } from '../../providers/GridProvider/GridProvider'
-import { KonvaEventObject } from 'konva/lib/Node'
 import { LayersContext } from '../../providers/LayersProvider'
 import Anchor from './Anchor/Anchor'
 import Curve from './Curve'
@@ -22,28 +21,25 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
   const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>(props.points[currentPoint])
   const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0 })
+  
+  const radius = (sizeBox / 2) - 2
 
   // draw points
-  const drawPoints = (context: Context, shape: ShapeType) => {
+  const drawPoints = (context: Context) => {
     context.beginPath()
 
     for (const point of points) {
-      const values = getCell(point.x, point.y)
+      const posXY = getCell(point.x, point.y)
         
-      if (values) {
-        const x = values[0]
-        const y = values[1]
-
+      if (posXY) {
         const fill = pointsProperties?.fill ?? '#FFF000'
-        const radius = sizeBox / 2
 
-        shape.fill(fill ?? '#FFF000')
-        context.arc(x, y, radius, 0, 2 * Math.PI, false)
+        context.fillStyle = fill ?? '#FF00'
+        context.arc(posXY[0], posXY[1], radius, 0, 2 * Math.PI, false)
         context.closePath()
+        context.fill()
       }
     }
-    
-    context.fillShape(shape)
   }
 
   // on click point
@@ -105,7 +101,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         active={active}
         currentPoint={currentPoint}
         getCell={getCell}
-        pointsProperties={pointsProperties}
+        pointsProperties={{ ...pointsProperties, radius: (sizeBox / 2) - 2 }}
         setPointXY={setPointXY}
         setPositionPoint={setPositionPoint}
       />

@@ -28,11 +28,21 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
 
   // create point line
   const createPointLine = (context: Context, point: PointTypePosition) => {
-    const pointXY = getCell(point.x, point.y)
+    const posXY = getCell(point.x, point.y) ?? [0, 0]
 
     if (pointXY) {
       context.beginPath()
-      context.arc(pointXY[0], pointXY[1], sizeBox / 6, 0, 2 * Math.PI)
+
+      if (isDragging) {
+        if (point.position === currentPoint) {
+          context.arc(pointXY.x, pointXY.y, sizeBox / 6, 0, Math.PI * 2)
+        } else {
+          context.arc(posXY[0], posXY[1], sizeBox / 6, 0, Math.PI * 2)
+        }
+      } else {
+        context.arc(posXY[0], posXY[1], sizeBox / 6, 0, Math.PI * 2)
+      }
+
       context.closePath()
       context.fillStyle = '#222'
       context.fill()
