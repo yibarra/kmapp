@@ -1,25 +1,24 @@
-import React, { memo, useCallback } from 'react'
-import { Context } from 'konva/lib/Context'
-import { Shape, ShapeConfig } from 'konva/lib/Shape'
 import { Group, Shape as ShapeK } from 'react-konva'
+import type { Context } from 'konva/lib/Context'
+import type { Shape, ShapeConfig } from 'konva/lib/Shape'
 
 import type { GridProps } from './interfaces'
 
 // grid
-const Grid: React.FC<GridProps> = ({ createGridBoxes, width, height }) => {
+const Grid = ({ createGridBoxes, width, height }: GridProps) => {
   // create axis
-  const createAxis = useCallback((ctx: Context): false | void => {
+  const createAxis = (ctx: Context): false | void => {
     createGridBoxes(ctx, width, height)
-  }, [createGridBoxes, height, width])
+  }
 
   // create grid scene
-  const createGridScene = useCallback((ctx: Context, shape: Shape<ShapeConfig>): void => {
+  const createGridScene = (ctx: Context, shape: Shape<ShapeConfig>): void => {
     ctx.beginPath()
     createAxis(ctx) // x & y
     ctx.closePath()
 
     ctx.fillStrokeShape(shape)
-  }, [createAxis])
+  }
 
   // render
   return <Group>
@@ -34,4 +33,4 @@ const Grid: React.FC<GridProps> = ({ createGridBoxes, width, height }) => {
   </Group>
 }
 
-export default memo(Grid)
+export default Grid

@@ -3,14 +3,17 @@ import { Group, Shape as ShapeK } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
+import Point from './Point'
+import Tooltip from './Tooltip'
+import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { AxisType } from '../../Grid/interfaces'
 import type { AnchorProps } from './interfaces'
-import Point from './Point'
 
 // anchor
 const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setAnchorXY }: AnchorProps) => {
   const { isAnchor, isDragging } = useContext(UIContext)
+  const { sizeBox } = useContext(GridContext)
 
   // move point
   const movePoint = (context: Context, pointCurveInit: number[], position: number) => {
@@ -83,9 +86,19 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
           index={key}
           getCell={getCell}
           key={key}
+          size={sizeBox}
           setAnchorXY={setAnchorXY}
         />
       ))}
+
+      <Tooltip
+        anchorXY={anchorXY}
+        curves={curves}
+        currentPoint={currentPoint}
+        getCell={getCell}
+        size={sizeBox / 4}
+        points={points}
+      />
     </Group>
   )
 }

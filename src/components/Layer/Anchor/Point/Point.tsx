@@ -2,17 +2,15 @@ import { useContext } from 'react'
 import { Circle } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 
-import { GridContext } from '../../../../providers/GridProvider/GridProvider'
 import { LayersContext } from '../../../../providers/LayersProvider'
 import { UIContext } from '../../../../providers/UIProvider/UIProvider'
 import type { PointAnchorProps } from './interfaces'
 
-const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }: PointAnchorProps) => {
+const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }: PointAnchorProps) => {
   const { setIsAnchor } = useContext(UIContext)
-  const { sizeBox } = useContext(GridContext)
   const { updateLayerCurvePoint } = useContext(LayersContext)
 
-  const radius = (sizeBox / 2) - 2
+  const radius = (size / 2) - 2
   const posXY = getCell(curve[0], curve[1]) ?? [0, 0]
 
   // on drag start point
@@ -46,20 +44,18 @@ const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }: Poin
 
   // render
   return (
-    <>
-      <Circle
-        draggable
-        fill="#FFF"
-        stroke="#222"
-        strokeWidth={2}
-        onDragEnd={onDragEndPoint}
-        onDragMove={onDragMovePoint}
-        onDragStart={onDragStartPoint}
-        radius={radius}
-        x={posXY[0]}
-        y={posXY[1]}
-      />
-    </>
+    <Circle
+      draggable
+      fill="#FFF"
+      stroke="#222"
+      strokeWidth={2}
+      onDragEnd={onDragEndPoint}
+      onDragMove={onDragMovePoint}
+      onDragStart={onDragStartPoint}
+      radius={radius}
+      x={posXY[0]}
+      y={posXY[1]}
+    />
   )
 }
 
