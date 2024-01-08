@@ -18,10 +18,10 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const { getCell } = useContext(GridContext)
   const { updateLayer, updateLayerPoint } = useContext(LayersContext)
 
-  const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>({ x: 0, y: 0 })
-  const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0 })
-
   const { active, currentPoint, points, pointsProperties } = props
+
+  const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>(props.points[currentPoint])
+  const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0 })
 
   // draw points
   const drawPoints = (context: Context, shape: ShapeType) => {
@@ -104,8 +104,8 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
           {...props}
           anchorXY={anchorXY}
           getCell={getCell}
-          setAnchorXY={setAnchorXY}
           pointXY={pointXY}
+          setAnchorXY={setAnchorXY}
         />
       )}
 

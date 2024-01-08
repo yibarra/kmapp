@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from 'react'
-import { Shape as LineKonva } from 'react-konva'
+import { Shape as ShapeK } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
@@ -90,7 +90,7 @@ const Curve = ({
 
   // render
   return (
-    <LineKonva
+    <ShapeK
       {...lineProperties}
       listening={false}
       ref={elementLayerRef}

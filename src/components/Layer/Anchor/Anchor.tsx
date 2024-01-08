@@ -1,80 +1,12 @@
 import { useContext } from 'react'
-import { Circle, Group, Shape as ShapeK } from 'react-konva'
-import { KonvaEventObject } from 'konva/lib/Node'
+import { Group, Shape as ShapeK } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
-import { GridContext } from '../../../providers/GridProvider/GridProvider'
-import { LayersContext } from '../../../providers/LayersProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { AxisType } from '../../Grid/interfaces'
-import type { AnchorProps, PointAnchorProps } from './interfaces'
-
-const PointAnchor = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY }: PointAnchorProps) => {
-  const { setIsAnchor } = useContext(UIContext)
-  const { sizeBox } = useContext(GridContext)
-  const { updateLayerCurvePoint } = useContext(LayersContext)
-
-  const posXY = getCell(curve[0], curve[1]) ?? [0, 0]
-
-  // on drag start point
-  const onDragStartPoint = (event: KonvaEventObject<DragEvent>) => {
-    event.cancelBubble = true
-
-    setIsAnchor(true)
-    setAnchorXY((pos) => ({ ...pos, index }))
-  }
-
-  // on drag move point
-  const onDragMovePoint = (event: KonvaEventObject<DragEvent>) => {
-    event.cancelBubble = true
-
-    const x = event.evt.clientX
-    const y = event.evt.clientY
-
-    setAnchorXY({ index, x, y })
-  }
-
-  // on drag end point
-  const onDragEndPoint = (event: KonvaEventObject<DragEvent>) => {
-    event.cancelBubble = true
-
-    const { evt: { clientX, clientY } } = event
-    const pos = getCell(clientX, clientY) ?? [0, 0]
-
-    updateLayerCurvePoint(index, pointInit, pointEnd, [pos[0], pos[1]])
-    setIsAnchor(false)
-  }
-
-  // render
-  return (
-    <>
-      <Circle
-        draggable
-        fill="#FFF"
-        stroke="#222"
-        strokeWidth={2}
-        onDragEnd={onDragEndPoint}
-        onDragMove={onDragMovePoint}
-        onDragStart={onDragStartPoint}
-        radius={(sizeBox / 2) - 2}
-        x={posXY[0]}
-        y={posXY[1]}
-      />
-
-      <Circle
-        listening={false}
-        fill="#222"
-        onDragEnd={onDragEndPoint}
-        onDragMove={onDragMovePoint}
-        onDragStart={onDragStartPoint}
-        radius={(sizeBox / 4)}
-        x={posXY[0]}
-        y={posXY[1]}
-      />
-    </>
-  )
-}
+import type { AnchorProps } from './interfaces'
+import Point from './Point'
 
 // anchor
 const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setAnchorXY }: AnchorProps) => {
@@ -146,7 +78,7 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
       />
 
       {Array.isArray(curves) && curves.map((curve, key) => (
-        <PointAnchor
+        <Point
           {...curve}
           index={key}
           getCell={getCell}
