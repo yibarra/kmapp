@@ -10,6 +10,7 @@ import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { AxisType } from '../../Grid/interfaces'
 import type { PointTypePosition } from '../Point/interfaces'
 import type { AnchorProps } from './interfaces'
+import { calculateDashArray, getDistance } from '../../../providers/GridProvider/helpers'
 
 // anchor
 const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setAnchorXY }: AnchorProps) => {
@@ -50,18 +51,18 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
   }
 
   // create line
-  const createLine = (context: Context, curvePos: AxisType, shape: ShapeType, anchorPoints: boolean) => {
-    shape.stroke('#222')
-    shape.strokeWidth(1)
-
+  const createLine = (context: Context, curvePos: AxisType, anchorPoints: boolean, point: number[]) => {
     if (isAnchor && anchorPoints) {
+      const dist = getDistance(curvePos, [anchorXY.x, anchorXY.y])
+      
+      context.setLineDash(calculateDashArray(dist, sizeBox / 2))
       context.lineTo(anchorXY.x, anchorXY.y)
     } else {
+      const dist = getDistance(curvePos, point)
+
+      context.setLineDash(calculateDashArray(dist, sizeBox / 2))
       context.lineTo(curvePos[0], curvePos[1])  
     }
-
-    context.fillShape(shape)
-    context.strokeShape(shape)
   }
 
   // create line anchor
@@ -70,7 +71,12 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
 
     if (pointCurve) {
       movePoint(context, pointCurve, point.position)
-      createLine(context, curvePos, shape, anchors)
+
+      shape.stroke('#222')
+      shape.strokeWidth(1)
+      createLine(context, curvePos, anchors, [point.x, point.y])
+      context.fillShape(shape)
+      context.strokeShape(shape)
       createPointLine(context, point, shape)
     }
   }
