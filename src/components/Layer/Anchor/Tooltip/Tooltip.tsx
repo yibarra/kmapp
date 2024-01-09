@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { Shape as ShapeK } from 'react-konva'
+import { Shape} from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 
 import { calculateDashArray, getDistanceBetweenPoints } from '../../../../providers/GridProvider/helpers'
@@ -78,7 +78,7 @@ const Tooltip = ({ anchorXY, curves, getCell, isAnchor = false, size }: TooltipP
 
   // render
   return (
-    <ShapeK
+    <Shape
       listening={false}
       sceneFunc={onDraw}
     />

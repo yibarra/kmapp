@@ -133,7 +133,7 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
   // update layer point
   const updateLayerPoint = useCallback((point: PointTypePosition, index: number): void => {
     const { points } = layers[current]
-    points[index] = { ...point }
+    points[index] = point
 
     updateLayer(current, { ...layers[current], points })
   }, [current, layers, updateLayer])

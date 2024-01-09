@@ -1,6 +1,7 @@
 import { useContext } from 'react'
-import { Group, Shape as ShapeK } from 'react-konva'
+import { Group, Shape } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
+import type { Shape as ShapeType } from 'konva/lib/Shape'
 
 import Point from './Point'
 import Tooltip from './Tooltip'
@@ -27,10 +28,11 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
   }
 
   // create point line
-  const createPointLine = (context: Context, point: PointTypePosition) => {
+  const createPointLine = (context: Context, point: PointTypePosition, shape: ShapeType) => {
     const posXY = getCell(point.x, point.y) ?? [0, 0]
 
     if (pointXY) {
+      shape.fill('#222')
       context.beginPath()
 
       if (isDragging) {
@@ -43,40 +45,38 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
         context.arc(posXY[0], posXY[1], sizeBox / 6, 0, Math.PI * 2)
       }
 
-      context.closePath()
-      context.fillStyle = '#222'
-      context.fill()
+      context.fillShape(shape)
     }
   }
 
   // create line
-  const createLine = (context: Context, curvePos: AxisType, anchorPoints: boolean) => {
-    context.strokeStyle = '#222'
-    context.lineWidth = 1
+  const createLine = (context: Context, curvePos: AxisType, shape: ShapeType, anchorPoints: boolean) => {
+    shape.stroke('#222')
+    shape.strokeWidth(1)
 
     if (isAnchor && anchorPoints) {
       context.lineTo(anchorXY.x, anchorXY.y)
     } else {
       context.lineTo(curvePos[0], curvePos[1])  
     }
-    
-    context.closePath()
-    context.stroke()
+
+    context.fillShape(shape)
+    context.strokeShape(shape)
   }
 
   // create line anchor
-  const createLineAnchor = (context: Context, curvePos: AxisType, point: PointTypePosition, anchors: boolean) => {
+  const createLineAnchor = (context: Context, shape: ShapeType, curvePos: AxisType, point: PointTypePosition, anchors: boolean) => {
     const pointCurve = getCell(point.x, point.y) ?? [0, 0]
 
     if (pointCurve) {
       movePoint(context, pointCurve, point.position)
-      createLine(context, curvePos, anchors)
-      createPointLine(context, point)
+      createLine(context, curvePos, shape, anchors)
+      createPointLine(context, point, shape)
     }
   }
 
   // draw line
-  const drawLine = (context: Context) => {
+  const drawLine = (context: Context, shape: ShapeType) => {
     context.beginPath()
 
     // draw curves
@@ -93,18 +93,20 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
           if (curvePos) {
             const anchors = (k === anchorXY.index)
 
-            createLineAnchor(context, curvePos, pointInit, anchors) // line init
-            createLineAnchor(context, curvePos, pointEnd, anchors) // line end
+            createLineAnchor(context, shape, curvePos, pointInit, anchors) // line init
+            createLineAnchor(context, shape, curvePos, pointEnd, anchors) // line end
           }
         }
       }
     }
+
+    context.fillShape(shape)
   }
   
   // render
   return (
     <Group>
-      <ShapeK
+      <Shape
         listening={false}
         sceneFunc={drawLine}
       />

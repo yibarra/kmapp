@@ -60,9 +60,7 @@ const Point = ({
         duration: 0.4,
       })
       
-      setPositionPoint(posX, posY, currentPoint)
-    } else {
-      element.current.to({ x, y, duration: 0.2 })
+      setPositionPoint(event.evt.clientX, event.evt.clientY, currentPoint)
     }
 
     setIsDragging(false)

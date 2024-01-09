@@ -9,7 +9,7 @@ const GridContext = createContext({} as GridContextProps)
 
 // sizeBox provider
 const GridProvider = ({ children, size = 15 }: GridProviderProps) => {
-  const [sizeBox, setSizeBox] = useState<number>(size)
+  const [sizeBox, setSizeBox] = useState(size)
 
   // fix position center
   const fixPositionCenter = useCallback(
