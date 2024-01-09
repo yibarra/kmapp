@@ -27,15 +27,11 @@ export const getNearestPosition = (pos: number[], points: PointTypePosition[], t
   for (const point of points) {
     const dist = getDistance(pos, [point.x, point.y])
 
-    console.info(dist, pos[0], point.x, minDist)
-
     if (dist < minDist && dist < threshold) {
       minDist = dist
       nearest = point
     }
   }
-
-  console.info(nearest)
 
   return nearest
 }

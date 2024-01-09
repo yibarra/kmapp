@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useRef } from 'react'
-import { Circle } from 'react-konva'
+import { Circle, Group } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
@@ -77,18 +77,20 @@ const Point = ({
 
   // render
   return (
-    <Circle
-      {...pointsProperties}
-      listening={active}
-      draggable={active}
-      onDragStart={onDragStartPoint}
-      onMouseDown={onDragStartPoint}
-      onDragMove={onDragMovePoint}
-      onDragEnd={onDragEndPoint}
-      ref={element}
-      x={x}
-      y={y}
-    />
+    <Group>
+      <Circle
+        {...pointsProperties}
+        listening={active}
+        draggable={active}
+        onDragStart={onDragStartPoint}
+        onMouseDown={onDragStartPoint}
+        onDragMove={onDragMovePoint}
+        onDragEnd={onDragEndPoint}
+        ref={element}
+        x={x}
+        y={y}
+      />
+    </Group>
   )
 }
 

@@ -77,6 +77,7 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
       createLine(context, curvePos, anchors, [point.x, point.y])
       context.fillShape(shape)
       context.strokeShape(shape)
+      
       createPointLine(context, point, shape)
     }
   }

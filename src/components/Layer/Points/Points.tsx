@@ -25,11 +25,10 @@ const Points = ({
     context.beginPath()
 
     for (const point of points) {
-      const values = getCell(point.x, point.y)
+      const pos = getCell(point.x, point.y)
         
-      if (values) {
-        const x = values[0]
-        const y = values[1]
+      if (pos) {
+        const [x, y] = pos
 
         if (active && isDragging) {
           if (currentPoint !== point.position) {
