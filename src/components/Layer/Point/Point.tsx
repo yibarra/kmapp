@@ -3,6 +3,7 @@ import { Circle, Group } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
+import ToolTip from './ToolTip'
 import type { PointProps } from './interfaces'
 
 // point
@@ -11,16 +12,18 @@ const Point = ({
   currentPoint,
   getCell,
   pointsProperties,
+  pointXY,
   setPointXY,
   setPositionPoint,
   x: xPos,
   y: yPos,
 }: PointProps) => {
-  const { setIsDragging } = useContext(UIContext)
+  const { isDragging, setIsDragging } = useContext(UIContext)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const element = useRef<any>(null)
   
+  // x, y
   const [x, y] = useMemo(() => {
     const pos = getCell(xPos, yPos)
 
@@ -90,6 +93,14 @@ const Point = ({
         x={x}
         y={y}
       />
+
+      {isDragging && (
+        <ToolTip
+          radius={pointsProperties.radius}
+          point={[x, y]}
+          pointXY={pointXY}
+        />
+      )}
     </Group>
   )
 }
