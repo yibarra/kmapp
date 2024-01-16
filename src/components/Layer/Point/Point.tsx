@@ -1,7 +1,10 @@
-import { useContext, useEffect, useMemo, useRef } from 'react'
-import { Circle, Group } from 'react-konva'
+import { useContext, useMemo, useRef } from 'react'
+import { Group, Shape } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
+import type { Context } from 'konva/lib/Context'
+import type { Shape as ShapeType } from 'konva/lib/Shape'
 
+import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import ToolTip from './ToolTip'
 import type { PointProps } from './interfaces'
@@ -19,6 +22,7 @@ const Point = ({
   y: yPos,
 }: PointProps) => {
   const { isDragging, setIsDragging } = useContext(UIContext)
+  const { sizeBox } = useContext(GridContext)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const element = useRef<any>(null)
@@ -41,10 +45,8 @@ const Point = ({
   const onDragMovePoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
-    const x = event.evt.clientX
-    const y = event.evt.clientY
-
-    setPointXY({ x, y })
+    element.current.position({ x: event.evt.clientX, y: event.evt.clientY })
+    setPointXY({ x: event.evt.clientX, y: event.evt.clientY })
   }
 
   // on drag end point
@@ -57,39 +59,36 @@ const Point = ({
       const posX = Math.floor(point[0])
       const posY = Math.floor(point[1])
 
-      element.current.to({
-        x: posX,
-        y: posY,
-        duration: 0.4,
-      })
-      
-      setPositionPoint(event.evt.clientX, event.evt.clientY, currentPoint)
+      element.current.position({ x: posX, y: posY })
+      setPositionPoint(posX, posY, currentPoint)
     }
 
     setIsDragging(false)
   }
 
-  // use effect
-  useEffect(() => {
-    if (element.current) {
-      if (typeof element.current.to !== 'undefined') {
-        element.current.to({ ...pointsProperties })
-      }
-    }
-  }, [pointsProperties])
+  // on draw
+  const onDraw = (context: Context, shape: ShapeType) => {
+    context.beginPath()
+    context.arc(0, 0, sizeBox / 2, 0, Math.PI * 2)
+    context.closePath()
+    context.strokeShape(shape)
+    context.fillShape(shape)
+  }
 
   // render
   return (
     <Group>
-      <Circle
-        {...pointsProperties}
+      <Shape
+        draggable
+        stroke="#00FF00"
+        fill="#FF00F0"
         listening={active}
-        draggable={active}
         onDragStart={onDragStartPoint}
         onMouseDown={onDragStartPoint}
         onDragMove={onDragMovePoint}
         onDragEnd={onDragEndPoint}
         ref={element}
+        sceneFunc={onDraw}
         x={x}
         y={y}
       />
@@ -97,6 +96,7 @@ const Point = ({
       {isDragging && (
         <ToolTip
           radius={pointsProperties.radius}
+          size={sizeBox}
           point={[x, y]}
           pointXY={pointXY}
         />
