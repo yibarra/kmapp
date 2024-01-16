@@ -59,7 +59,7 @@ const Point = ({
       const posX = Math.floor(point[0])
       const posY = Math.floor(point[1])
 
-      element.current.position({ x: posX, y: posY })
+      element.current.to({ x: posX, y: posY })
       setPositionPoint(posX, posY, currentPoint)
     }
 
@@ -69,7 +69,7 @@ const Point = ({
   // on draw
   const onDraw = (context: Context, shape: ShapeType) => {
     context.beginPath()
-    context.arc(0, 0, sizeBox / 2, 0, Math.PI * 2)
+    context.arc(0, 0, (sizeBox / 2) - 2, 0, Math.PI * 2)
     context.closePath()
     context.strokeShape(shape)
     context.fillShape(shape)
@@ -79,9 +79,8 @@ const Point = ({
   return (
     <Group>
       <Shape
+        {...pointsProperties}
         draggable
-        stroke="#00FF00"
-        fill="#FF00F0"
         listening={active}
         onDragStart={onDragStartPoint}
         onMouseDown={onDragStartPoint}
@@ -93,14 +92,13 @@ const Point = ({
         y={y}
       />
 
-      {isDragging && (
-        <ToolTip
-          radius={pointsProperties.radius}
-          size={sizeBox}
-          point={[x, y]}
-          pointXY={pointXY}
-        />
-      )}
+      <ToolTip
+        isDragging={isDragging}
+        radius={pointsProperties.radius}
+        size={sizeBox}
+        point={[x, y]}
+        pointXY={pointXY}
+      />
     </Group>
   )
 }
