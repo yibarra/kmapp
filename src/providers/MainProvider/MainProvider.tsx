@@ -1,9 +1,11 @@
 import { createContext, useEffect, useState } from 'react'
 import WebFontLoader from 'webfontloader'
 
-import type { MainContextProps, MainProviderProps } from './interfaces'
-import UIProvider from '../UIProvider/UIProvider'
 import UseWindowSize from '../../hooks/useWindowSize'
+import UIProvider from '../UIProvider/UIProvider'
+import { DataProvider } from '../DataProvider'
+import { dataLayers } from '../../components/Layers/data'
+import type { MainContextProps, MainProviderProps } from './interfaces'
 
 // main context
 const MainContext = createContext({} as MainContextProps)
@@ -42,7 +44,9 @@ const MainProvider = ({ children }: MainProviderProps) => {
       }}
     >
       <UIProvider>
-        {children}
+        <DataProvider name="kmapp.layers" data={dataLayers.layers}>
+          {children}
+        </DataProvider>
       </UIProvider>
     </MainContext.Provider>
   )

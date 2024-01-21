@@ -1,13 +1,10 @@
 import { useContext } from 'react'
-
-import { DataContext } from '../../providers/DataProvider'
-import { LayersContext, LayersProvider } from '../../providers/LayersProvider'
-import { UIContext } from '../../providers/UIProvider/UIProvider'
-import Layer from '../Layer'
-import type { LayersProvidersProps } from '../../providers/LayersProvider/interfaces'
 import { Group } from 'react-konva'
 
-const LayersContainer = () => {
+import { LayersContext } from '../../providers/LayersProvider'
+import Layer from '../Layer'
+
+const Layers = () => {
   const { current, layers } = useContext(LayersContext)
 
   return (
@@ -21,19 +18,6 @@ const LayersContainer = () => {
         />
       ))}
     </Group>
-  )
-}
-
-const Layers = () => {
-  const { data } = useContext(DataContext)
-  const { enable, remove } = useContext(UIContext)
-
-  const values = data as LayersProvidersProps['data']['layers']
-
-  return (
-    <LayersProvider data={{ layers: values }} enable={enable} remove={remove}>
-      <LayersContainer />
-    </LayersProvider>
   )
 }
 
