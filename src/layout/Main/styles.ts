@@ -10,7 +10,6 @@ export const MainSection = styled.div`
   .konvajs-content {
     left: 0;
     position: absolute;
-    tabindex: 0;
     top: 0;
   }
 `

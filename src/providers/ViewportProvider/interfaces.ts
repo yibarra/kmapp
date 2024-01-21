@@ -14,12 +14,13 @@ type propertiesType = {
 }
 
 export interface ViewportContextProps {
-  getMouse(event: WheelEvent): number[]
+  bindEvents: any
+  getMouse(offsetX: number, offsetY: number): number[]
   properties: MutableRefObject<propertiesType>
-  onDrag(event: WheelEvent): void
-  onMove(event: WheelEvent): void
+  onDrag(offsetX: number, offsetY: number): void
+  onMove(offsetX: number, offsetY: number): void
   onMoveEnd(): void
-  onZoom(event: WheelEvent): void
+  onZoom(direction: number): void
   reset(context: Context): void
 }
 

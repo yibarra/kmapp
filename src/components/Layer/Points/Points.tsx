@@ -7,6 +7,7 @@ import type { KonvaEventObject } from 'konva/lib/Node'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { PointsProps } from './interfaces'
 import { getNearestPosition } from '../../../providers/GridProvider/helpers'
+import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
 
 const Points = ({
   active,
@@ -19,6 +20,9 @@ const Points = ({
   setUpdateLayer
 }: PointsProps) => {
   const { isDragging } = useContext(UIContext)
+  const { properties } = useContext(ViewportContext)
+
+  console.info(properties, '------')
 
   // draw points
   const onDraw = (context: Context, shape: ShapeType) => {

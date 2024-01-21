@@ -1,11 +1,15 @@
 import { useContext } from 'react'
 
 import { LayersContext } from '../../../providers/LayersProvider'
+import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
 import * as S from './styles'
 
 // layers
 const Layers = () => {
   const { layers, setCurrent } = useContext(LayersContext)
+  const { properties } = useContext(ViewportContext)
+
+  console.info(properties, '*******')
 
   // render
   return (

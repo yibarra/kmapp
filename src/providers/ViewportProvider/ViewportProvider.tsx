@@ -1,4 +1,5 @@
-import { createContext, useCallback, useRef } from 'react'
+import { createContext, useRef } from 'react'
+import { useGesture } from '@use-gesture/react'
 import type { Context } from 'konva/lib/Context'
 
 import { add, scale, subtract } from '../../helpers/graphs'
@@ -23,22 +24,13 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
   })
 
   // get mouse
-  const getMouse = useCallback(
-    (event: MouseEvent) => ([
-      (event.offsetX * properties.current.zoom) - properties.current.offset[0],
-      (event.offsetY * properties.current.zoom) - properties.current.offset[1]
-    ]), [properties])
+  const getMouse = (offsetX: number, offsetY: number) => ([
+    (offsetX * properties.current.zoom) - properties.current.offset[0],
+    (offsetY * properties.current.zoom) - properties.current.offset[1]
+  ])
 
   // get off set
   const getOffset = () => (add(properties.current.offset, properties.current.drag.offset))
-
-  // on zoom
-  const onZoom = (event: WheelEvent) => {
-    const dir = Math.sign(event.deltaY)
-    const value = properties.current.zoom + dir * 0.1
-
-    properties.current.zoom =  Math.max(1, Math.min(5, value))
-  }
 
   // reset
   const reset = (context: Context) => {
@@ -56,23 +48,21 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
   }
 
   // on drag
-  const onDrag = (event: WheelEvent) =>  {
-    if (event.button == 1) { // middle button
-      properties.current.drag.start = getMouse(event)
-      properties.current.drag.active = true
-    }
- }
+  const onDrag = (offsetX: number, offsetY: number) =>  {
+    properties.current.drag.start = getMouse(offsetX, offsetY)
+    properties.current.drag.active = true
+  }
 
- // on move
- const onMove = (event: WheelEvent) => {
-    if (properties.current.drag.active) {
-      properties.current.drag.end = getMouse(event)
-      properties.current.drag.offset = subtract(properties.current.drag.end, properties.current.drag.start)
-    }
- }
+  // on move
+  const onMove = (offsetX: number, offsetY: number) => {
+      if (properties.current.drag.active) {
+        properties.current.drag.end = getMouse(offsetX, offsetY)
+        properties.current.drag.offset = subtract(properties.current.drag.end, properties.current.drag.start)
+      }
+  }
 
- // on move end
- const onMoveEnd = () => {
+  // on move end
+  const onMoveEnd = () => {
     if (properties.current.drag.active) {
       properties.current.offset = add(properties.current.offset, properties.current.drag.offset)
 
@@ -85,10 +75,29 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
     }
   }
 
+  // on zoom
+  const onZoom = (direction: number) => {
+    const dir = Math.sign(direction)
+    const value = properties.current.zoom + dir * 0.1
+
+    properties.current.zoom =  Math.max(1, Math.min(5, value))
+  }
+
+  // bind events
+  const bindEvents = useGesture(
+    {
+      onWheel: ({ direction: [, y] }) => onZoom(y),
+      onDragStart: ({ offset: [x, y] }) => onDrag(x, y),
+      onDrag: ({ offset: [x, y] }) => onMove(x, y),
+      onDragEnd: () => onMoveEnd(),
+    }
+  )
+
   // render
   return (
     <ViewportContext.Provider
       value={{
+        bindEvents,
         getMouse,
         properties,
         onDrag,

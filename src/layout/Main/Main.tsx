@@ -27,11 +27,11 @@ const Main = () => {
 
   // render
   return (
-    <S.MainSection
-      tabIndex={1}
-    >
-      {loaded === true && size.height > 0 && size.width > 0 && (
-        <ViewportProvider height={size.height} width={size.width}>
+    <ViewportProvider height={size.height} width={size.width}>
+      <S.MainSection
+        tabIndex={1}
+      >
+        {loaded === true && size.height > 0 && size.width > 0 && (
           <LayersProvider data={{ layers: values }} enable={enable} remove={remove}>
             <Stage
               size={size}
@@ -39,9 +39,9 @@ const Main = () => {
 
             <Controls.Layers />
           </LayersProvider>
-        </ViewportProvider>
-      )}
-    </S.MainSection>
+        )}
+      </S.MainSection>
+    </ViewportProvider>
   );
 };
 
