@@ -8,6 +8,7 @@ export const LayersWrapper = styled.div`
   left: initial;
   right: 0;
   position: absolute;
+  top: 0;
   width: 280px;
   z-index: 10;
 `

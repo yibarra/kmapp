@@ -13,7 +13,7 @@ const Line = ({
   active = false,
   currentPoint,
   curves,
-  getCell,
+  getMouse,
   points,
   lineProperties,
   pointXY,
@@ -59,7 +59,7 @@ const Line = ({
       const item = items[index]
 
       if (item) {
-        const point = getCell(item.x, item.y)
+        const point = getMouse(item.x, item.y, true)
   
         if (point) {
           const { element } = findPointCurve(index)

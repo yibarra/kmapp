@@ -13,6 +13,7 @@ const Curve = ({
   currentPoint,
   curves,
   getCell,
+  getMouse,
   lineProperties,
   points,
   pointXY,
@@ -36,8 +37,8 @@ const Curve = ({
       const pointEnd = points.find((p) => p.position === curve.pointEnd)
 
       if (pointInit && pointEnd) {
-        const pointCurveInit = getCell(pointInit.x, pointInit.y) ?? [0, 0]
-        const pointCurveEnd = getCell(pointEnd.x, pointEnd.y) ?? [0, 0]
+        const pointCurveInit = getMouse(pointInit.x, pointInit.y, true) ?? [0, 0]
+        const pointCurveEnd = getMouse(pointEnd.x, pointEnd.y, true) ?? [0, 0]
 
         if (pointCurveInit) {
           if (active && isDragging && pointInit.position === currentPoint) {
@@ -47,18 +48,22 @@ const Curve = ({
           }
 
           if (active && isAnchor && anchorXY.index === k) {
+            const [x, y] = getMouse(anchorXY.x, anchorXY.y, true)
+
             context.quadraticCurveTo(
-              anchorXY.x,
-              anchorXY.y,
+              x,
+              y,
               pointCurveEnd[0],
               pointCurveEnd[1],
             )
           } else {
             if (active && isDragging && parentCurve) {
               if (parentCurve === curve && parentCurve.pointEnd === pointEnd.position) {
+                const [xC, yC] = getMouse(anchorXY.x, anchorXY.y, true)
+
                 context.quadraticCurveTo(
-                  curve.curve[0],
-                  curve.curve[1],
+                  xC,
+                  yC,
                   pointXY.x,
                   pointXY.y
                 )
@@ -67,9 +72,11 @@ const Curve = ({
               }
             }
 
+            const [xC, yC] = getMouse(anchorXY.x, anchorXY.y, true)
+
             context.quadraticCurveTo(
-              curve.curve[0],
-              curve.curve[1],
+              xC,
+              yC,
               pointCurveEnd[0],
               pointCurveEnd[1],
             )

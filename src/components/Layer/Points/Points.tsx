@@ -5,14 +5,14 @@ import type { Shape as ShapeType } from 'konva/lib/Shape'
 import type { KonvaEventObject } from 'konva/lib/Node'
 
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
-import type { PointsProps } from './interfaces'
 import { getNearestPosition } from '../../../providers/GridProvider/helpers'
-import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
+import type { PointsProps } from './interfaces'
 
 const Points = ({
   active,
   currentPoint,
   getCell,
+  getMouse,
   radius,
   points,
   pointsProperties,
@@ -20,29 +20,22 @@ const Points = ({
   setUpdateLayer
 }: PointsProps) => {
   const { isDragging } = useContext(UIContext)
-  const { properties } = useContext(ViewportContext)
-
-  console.info(properties, '------')
 
   // draw points
   const onDraw = (context: Context, shape: ShapeType) => {
     context.beginPath()
 
     for (const point of points) {
-      const pos = getCell(point.x, point.y)
-        
-      if (pos) {
-        const [x, y] = pos
-
-        if (active && isDragging) {
-          if (currentPoint !== point.position) {
-            shape.fill(pointsProperties.fill ?? '#222')
-            context.arc(x, y, radius, 0, Math.PI * 2, false)
-          }
-        } else {
+      const [x, y] = getMouse(point.x, point.y, true)
+      
+      if (active && isDragging) {
+        if (currentPoint !== point.position) {
           shape.fill(pointsProperties.fill ?? '#222')
           context.arc(x, y, radius, 0, Math.PI * 2, false)
         }
+      } else {
+        shape.fill(pointsProperties.fill ?? '#222')
+        context.arc(x, y, radius, 0, Math.PI * 2, false)
       }
       
       context.closePath()

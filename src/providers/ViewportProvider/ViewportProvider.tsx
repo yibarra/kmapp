@@ -1,4 +1,4 @@
-import { createContext, useRef } from 'react'
+import { createContext, useCallback, useMemo, useState } from 'react'
 import { useGesture } from '@use-gesture/react'
 import type { Context } from 'konva/lib/Context'
 
@@ -11,7 +11,7 @@ const ViewportContext = createContext({} as ViewportContextProps)
 // Viewport Provider
 const ViewportProvider = ({ children, height, width }: ViewportProviderProps) => {
   // properties
-  const properties = useRef({
+  const [properties, setProperties] = useState({
     center: [width / 2, height / 2],
     drag: {
       start: [0, 0],
@@ -24,79 +24,97 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
   })
 
   // get mouse
-  const getMouse = (offsetX: number, offsetY: number) => ([
-    (offsetX * properties.current.zoom) - properties.current.offset[0],
-    (offsetY * properties.current.zoom) - properties.current.offset[1]
-  ])
+  const getMouse = useCallback((offsetX: number, offsetY: number, subtractDragOffset = false) => {
+    const p = [
+      (offsetX * properties.zoom) - properties.offset[0],
+      (offsetY * properties.zoom) - properties.offset[1]
+    ]
+
+   return subtractDragOffset ? subtract(p, properties.drag.offset) : p
+  }, [properties])
 
   // get off set
-  const getOffset = () => (add(properties.current.offset, properties.current.drag.offset))
+  const getOffset = useCallback(() => add(properties.offset, properties.drag.offset), [properties])
 
   // reset
-  const reset = (context: Context) => {
+  const reset = useCallback((context: Context) => {
     context.restore()
     context.clearRect(0, 0, width, height)
     context.save()
-    context.translate(properties.current.center[0], properties.current.center[1])
-    context.scale(1 / properties.current.zoom, 1 / properties.current.zoom)
+    context.translate(properties.center[0], properties.center[1])
+    context.scale(1 / properties.zoom, 1 / properties.zoom)
 
     const offset = getOffset()
 
     if (Array.isArray(offset)) {
       context.translate(offset[0], offset[1])
     }
-  }
+  }, [getOffset, height, properties, width])
 
   // on drag
-  const onDrag = (offsetX: number, offsetY: number) =>  {
-    properties.current.drag.start = getMouse(offsetX, offsetY)
-    properties.current.drag.active = true
-  }
+  const onDrag = useCallback((offsetX: number, offsetY: number) =>  {
+    setProperties((props) => ({
+      ...props,
+      drag: {
+        ...props.drag,
+        start: getMouse(offsetX, offsetY),
+        active: true
+      }
+    }))
+  }, [getMouse, setProperties])
 
   // on move
-  const onMove = (offsetX: number, offsetY: number) => {
-      if (properties.current.drag.active) {
-        properties.current.drag.end = getMouse(offsetX, offsetY)
-        properties.current.drag.offset = subtract(properties.current.drag.end, properties.current.drag.start)
-      }
-  }
+  const onMove = useCallback((offsetX: number, offsetY: number, event: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent) => {
+    if (properties.drag.active && event.shiftKey) {
+      setProperties((props) => ({
+        ...props,
+        drag: {
+          ...props.drag,
+          end: getMouse(offsetX, offsetY),
+          offset: subtract(props.drag.end, props.drag.start)
+        }
+      }))
+    }
+  }, [getMouse, properties.drag, setProperties])
 
   // on move end
-  const onMoveEnd = () => {
-    if (properties.current.drag.active) {
-      properties.current.offset = add(properties.current.offset, properties.current.drag.offset)
-
-      properties.current.drag = {
-        start: [0, 0],
-        end: [0, 0],
-        offset: [0, 0],
-        active: false,
-      }
+  const onMoveEnd = useCallback(() => {
+    if (properties.drag.active) {
+      setProperties((props) => ({
+        ...props,
+        drag: {
+          start: [0, 0],
+          end: [0, 0],
+          offset: [0, 0],
+          active: false,
+        },
+        offset: add(properties.offset, properties.drag.offset)
+      }))
     }
-  }
+  }, [properties, setProperties])
 
   // on zoom
-  const onZoom = (direction: number) => {
+  const onZoom = useCallback((direction: number) => {
     const dir = Math.sign(direction)
-    const value = properties.current.zoom + dir * 0.1
+    const value = properties.zoom + dir * 0.1
 
-    properties.current.zoom =  Math.max(1, Math.min(5, value))
-  }
+    setProperties((props) => ({ ...props, zoom: Math.max(1, Math.min(5, value)) }))
+  }, [properties, setProperties])
 
   // bind events
   const bindEvents = useGesture(
     {
       onWheel: ({ direction: [, y] }) => onZoom(y),
-      onDragStart: ({ offset: [x, y] }) => onDrag(x, y),
-      onDrag: ({ offset: [x, y] }) => onMove(x, y),
+      onDrag: ({ event, offset: [x, y] }) => onMove(x, y, event),
       onDragEnd: () => onMoveEnd(),
+      onDragStart: ({ offset: [x, y] }) => onDrag(x, y),
     }
   )
 
   // render
   return (
     <ViewportContext.Provider
-      value={{
+      value={useMemo(() => ({
         bindEvents,
         getMouse,
         properties,
@@ -105,7 +123,16 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
         onMoveEnd,
         onZoom,
         reset,
-      }}
+      }), [
+        bindEvents,
+        getMouse,
+        properties,
+        onDrag,
+        onMove,
+        onMoveEnd,
+        onZoom,
+        reset
+      ])}
     > 
       {children}
     </ViewportContext.Provider>

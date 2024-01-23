@@ -11,10 +11,12 @@ import type { LayerProps } from '../../providers/LayersProvider/interfaces'
 import type { PointTypePosition } from './Point/interfaces'
 import type { PointAnchorPosition } from './Anchor/interfaces'
 import Points from './Points'
+import { ViewportContext } from '../../providers/ViewportProvider/ViewportProvider'
 
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const { getCell, sizeBox } = useContext(GridContext)
   const { updateLayer, updateLayerPoint } = useContext(LayersContext)
+  const { getMouse, properties } = useContext(ViewportContext)
 
   const { active, currentPoint, points, pointsProperties } = props
 
@@ -48,6 +50,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         {...props}
         anchorXY={anchorXY}
         getCell={getCell}
+        getMouse={getMouse}
         pointXY={pointXY}
       />
 
@@ -55,6 +58,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         {...props}
         anchorXY={anchorXY}
         getCell={getCell}
+        getMouse={getMouse}
         pointXY={pointXY}
       />
 
@@ -62,8 +66,10 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         active={active}
         currentPoint={currentPoint}
         getCell={getCell}
-        points={points}
+        getMouse={getMouse}
         radius={radius}
+        points={points}
+        properties={properties}
         pointsProperties={pointsProperties}
         setUpdateLayer={setUpdateLayer}
         setPointXY={setPointXY}
