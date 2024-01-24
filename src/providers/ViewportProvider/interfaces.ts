@@ -14,7 +14,6 @@ type propertiesType = {
 }
 
 export interface ViewportContextProps {
-  bindEvents: any
   getMouse(offsetX: number, offsetY: number, subtractDragOffset?: boolean): number[]
   properties: propertiesType
   onDrag(offsetX: number, offsetY: number): void

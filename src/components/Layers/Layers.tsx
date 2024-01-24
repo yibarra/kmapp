@@ -14,7 +14,7 @@ const Layers = () => {
           {...layer}
           active={current === index}
           index={index}
-          key={index}
+          key={layer.id}
         />
       ))}
     </Group>

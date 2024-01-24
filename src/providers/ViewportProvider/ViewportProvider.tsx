@@ -1,5 +1,4 @@
 import { createContext, useCallback, useMemo, useState } from 'react'
-import { useGesture } from '@use-gesture/react'
 import type { Context } from 'konva/lib/Context'
 
 import { add, scale, subtract } from '../../helpers/graphs'
@@ -71,7 +70,7 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
         drag: {
           ...props.drag,
           end: getMouse(offsetX, offsetY),
-          offset: subtract(props.drag.end, props.drag.start)
+          offset: subtract(props.drag.start, props.drag.end)
         }
       }))
     }
@@ -98,24 +97,16 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
     const dir = Math.sign(direction)
     const value = properties.zoom + dir * 0.1
 
-    setProperties((props) => ({ ...props, zoom: Math.max(1, Math.min(5, value)) }))
+    setProperties((props) => ({
+      ...props,
+      zoom: Math.max(1, Math.min(5, value))
+    }))
   }, [properties, setProperties])
-
-  // bind events
-  const bindEvents = useGesture(
-    {
-      onWheel: ({ direction: [, y] }) => onZoom(y),
-      onDrag: ({ event, offset: [x, y] }) => onMove(x, y, event),
-      onDragEnd: () => onMoveEnd(),
-      onDragStart: ({ offset: [x, y] }) => onDrag(x, y),
-    }
-  )
 
   // render
   return (
     <ViewportContext.Provider
       value={useMemo(() => ({
-        bindEvents,
         getMouse,
         properties,
         onDrag,
@@ -124,7 +115,6 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
         onZoom,
         reset,
       }), [
-        bindEvents,
         getMouse,
         properties,
         onDrag,

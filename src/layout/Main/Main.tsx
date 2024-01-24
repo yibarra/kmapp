@@ -28,9 +28,7 @@ const Main = () => {
   // render
   return (
     <ViewportProvider height={size.height} width={size.width}>
-      <S.MainSection
-        tabIndex={1}
-      >
+      <S.MainSection tabIndex={0}>
         {loaded === true && size.height > 0 && size.width > 0 && (
           <LayersProvider data={{ layers: values }} enable={enable} remove={remove}>
             <Stage

@@ -1,4 +1,5 @@
 import { useContext } from 'react'
+import { useGesture } from '@use-gesture/react'
 import { Stage as StageKonva, Layer as LayerKonva } from 'react-konva'
 
 import { GridContext } from '../../../providers/GridProvider/GridProvider'
@@ -11,11 +12,21 @@ import * as S from './styles'
 // stage
 const Stage = ({ size }: StageProps) => {
   const { createGridBoxes } = useContext(GridContext)
-  const { bindEvents } = useContext(ViewportContext)
+  const { onDrag, onMove, onMoveEnd, onZoom } = useContext(ViewportContext)
+
+  // bind events
+  const bind = useGesture(
+    {
+      onWheel: ({ direction: [, dirY] }) => onZoom(dirY),
+      onDrag: ({ event, offset: [x, y] }) => onMove(x, y, event),
+      onDragEnd: () => onMoveEnd(),
+      onDragStart: ({ offset: [x, y] }) => onDrag(x, y),
+    }
+  )
 
   // render
   return (
-    <S.StageWrapper {...bindEvents()}>
+    <S.StageWrapper {...bind()}>
       <StageKonva
         className="stage"
         tabIndex={0}
