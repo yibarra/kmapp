@@ -65,7 +65,6 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
       <Points
         active={active}
         currentPoint={currentPoint}
-        getCell={getCell}
         getMouse={getMouse}
         radius={radius}
         points={points}
@@ -79,7 +78,6 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         {...points[props.currentPoint]}
         active={active}
         currentPoint={currentPoint}
-        getCell={getCell}
         pointsProperties={{ ...pointsProperties, radius: (sizeBox / 2) - 2 }}
         pointXY={pointXY}
         setPointXY={setPointXY}

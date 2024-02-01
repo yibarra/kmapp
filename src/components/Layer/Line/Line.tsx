@@ -7,6 +7,7 @@ import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { LineProps } from './interfaces'
 import type { CurveType } from '../../../providers/LayersProvider/interfaces'
 import type { PointTypePosition } from '../Point/interfaces'
+import { GridContext } from '../../../providers/GridProvider/GridProvider'
 
 // line
 const Line = ({
@@ -21,6 +22,7 @@ const Line = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const elementLayerRef = useRef<any>(null)
 
+  const { getCell, sizeBox } = useContext(GridContext)
   const { isDragging } = useContext(UIContext)
 
   // find point curve
@@ -120,12 +122,23 @@ const Line = ({
     // draw points
     for (const line of lines) {
       if (line) {
-        const [ x, y, move ] = line
+        const [ xL, yL, move ] = line
 
-        if (move) {
-          context.moveTo(x, y)
+        if (!isDragging) {
+          const [cx, cy] = getCell(xL, yL) ?? [0, 0]
+          const radius = sizeBox / 2
+
+          if (move) {
+            context.moveTo(cx + radius, cy + radius)
+          } else {
+            context.lineTo(cx + radius, cy + radius)
+          }
         } else {
-          context.lineTo(x, y)
+          if (move) {
+            context.moveTo(xL, yL)
+          } else {
+            context.lineTo(xL, yL)
+          }
         }
       }
     }

@@ -4,7 +4,6 @@ type propertiesType = {
   center: number[]
   drag: {
     offset: number[]
-    active: boolean
   },
   offset: number[]
 }

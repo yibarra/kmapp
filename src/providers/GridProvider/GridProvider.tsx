@@ -9,6 +9,7 @@ const GridContext = createContext({} as GridContextProps)
 
 // sizeBox provider
 const GridProvider = ({ children, size = 15 }: GridProviderProps) => {
+  const [pos, setPos] = useState([0, 0])
   const [sizeBox, setSizeBox] = useState(size)
 
   // fix position center
@@ -17,28 +18,13 @@ const GridProvider = ({ children, size = 15 }: GridProviderProps) => {
     (Math.floor(value + (sizeAxis - Math.floor(axis * sizeBox)) / 2))
   , [])
 
-  // get grid axis
-  const getGridAxis = useCallback((width: number, height: number) => {
-    const xGrid: number = Math.floor(width / sizeBox)
-    const yGrid: number = Math.floor(height / sizeBox)
-
-    return {
-      xGrid,
-      yGrid
-    }
-  }, [sizeBox])
-
   // create grid boxes
   const createGridBoxes = useCallback((ctx: Context, width: number, height: number): void => {
-    const { xGrid, yGrid } = getGridAxis(width, height)
-
     const size = width > height ? width : height
-    const diffX = Math.floor(width / 2 - (xGrid / 2 * sizeBox))
-    const diffY = Math.floor(height / 2 - (yGrid / 2 * sizeBox))
     
     for (let i = 0; i < size / sizeBox; i++) {
-      const x = (i * sizeBox) + diffX
-      const y = (i * sizeBox) + diffY
+      const x = (i * sizeBox)
+      const y = (i * sizeBox)
 
       ctx.moveTo(x, 0)
       ctx.lineTo(x, size)
@@ -46,23 +32,25 @@ const GridProvider = ({ children, size = 15 }: GridProviderProps) => {
       ctx.moveTo(0, y)
       ctx.lineTo(size, y)
     }
-  }, [getGridAxis, sizeBox])
+  }, [sizeBox])
 
   // get cell
   const getCell = useCallback((x: number, y: number): AxisType | void => {
-    const { innerWidth: width, innerHeight: height } = window
-    const { xGrid, yGrid } = getGridAxis(width, height)
+    const posX = Math.floor(x / sizeBox) * sizeBox
+    const posY = Math.floor(y / sizeBox) * sizeBox
 
-    if (xGrid && yGrid) {
-      const posX = fixPositionCenter(Math.floor(Math.floor(x / sizeBox) * sizeBox), width, xGrid, sizeBox)
-      const posY = fixPositionCenter(Math.floor(Math.floor(y / sizeBox) * sizeBox), height, yGrid, sizeBox)
-      
-      const posCellX = posX + sizeBox / 2
-      const posCellY = posY + sizeBox / 2
+    return [posX, posY, sizeBox, posX, posY]
+  }, [sizeBox])
 
-      return [posCellX, posCellY, sizeBox, posX, posY]
-    }
-  }, [fixPositionCenter, getGridAxis, sizeBox])
+  // set position click
+  const setPosition = useCallback((value: number[]) => {
+    const [x, y] = value
+
+    const xPos = (Math.floor(x / size) * size)
+    const yPos = (Math.floor(y / size) * size)
+
+    setPos([xPos, yPos])
+  }, [setPos, size])
 
   // render
   return (
@@ -70,13 +58,17 @@ const GridProvider = ({ children, size = 15 }: GridProviderProps) => {
       value={useMemo(() => ({
         createGridBoxes,
         getCell,
+        pos,
         sizeBox,
+        setPos: setPosition,
         setSizeBox,
         fixPositionCenter,
       }), [
         createGridBoxes,
         getCell,
+        pos,
         sizeBox,
+        setPosition,
         setSizeBox,
         fixPositionCenter]
       )}

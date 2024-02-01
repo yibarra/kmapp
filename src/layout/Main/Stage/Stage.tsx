@@ -11,12 +11,13 @@ import * as S from './styles'
 
 // stage
 const Stage = ({ size }: StageProps) => {
-  const { createGridBoxes } = useContext(GridContext)
+  const { createGridBoxes, setPos } = useContext(GridContext)
   const { onDrag, onMove, onMoveEnd } = useContext(ViewportContext)
 
   // bind events
   const bind = useGesture(
     {
+      onClick: ({ event }) => setPos([event.clientX, event.clientY], [event.view?.innerWidth ?? 0, event.view?.innerHeight ?? 0]),
       onDrag: ({ event, offset }) => onMove(offset, event),
       onDragEnd: ({ delta }) => onMoveEnd(delta),
       onDragStart: () => onDrag(),
@@ -33,7 +34,7 @@ const Stage = ({ size }: StageProps) => {
         width={size.width}
       >
         <LayerKonva>
-          <Grid createGridBoxes={createGridBoxes} {...size} />
+          <Grid {...size} createGridBoxes={createGridBoxes} />
 
           <Layers />
         </LayerKonva>

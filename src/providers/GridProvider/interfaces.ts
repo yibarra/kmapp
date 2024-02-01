@@ -7,6 +7,8 @@ export interface GridContextProps {
   createGridBoxes(ctx: Context, width: number, height: number): void
   getCell(x: number, y: number): AxisType | void
   sizeBox: number
+  pos: number[]
+  setPos(value: number[], view: number[]): void
   fixPositionCenter(value: number, sizeAxis: number, axis: number, sizeBox: number): number
   setSizeBox(val: number): void
 }

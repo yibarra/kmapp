@@ -1,6 +1,7 @@
-import { createContext, useCallback, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
 
 import { scale, subtract } from '../../helpers/graphs'
+import { UIContext } from '../UIProvider/UIProvider'
 import type { ViewportContextProps, ViewportProviderProps } from './interfaces'
 
 // Viewport Context
@@ -8,12 +9,13 @@ const ViewportContext = createContext({} as ViewportContextProps)
 
 // Viewport Provider
 const ViewportProvider = ({ children, height, width }: ViewportProviderProps) => {
+  const { isDragging, setIsDragging } = useContext(UIContext)
+    
   // properties
   const [properties, setProperties] = useState({
     center: [width / 2, height / 2],
     drag: {
       offset: [0, 0],
-      active: false
     },
     offset: scale([width / 2, height / 2], -1),
   })
@@ -30,18 +32,19 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
 
   // on drag
   const onDrag = useCallback(() =>  {
+    setIsDragging(true)
+
     setProperties((props) => ({
       ...props,
       drag: {
         ...props.drag,
-        active: true
       }
     }))
-  }, [setProperties])
+  }, [setIsDragging, setProperties])
 
   // on move
   const onMove = useCallback((offset: number[], event: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent) => {
-    if (properties.drag.active && event.shiftKey) {
+    if (isDragging && event.shiftKey) {
       setProperties((props) => ({
         ...props,
         drag: {
@@ -50,21 +53,22 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
         }
       }))
     }
-  }, [properties.drag, setProperties])
+  }, [isDragging, setProperties])
 
   // on move end
   const onMoveEnd = useCallback((offset: number[]) => {
-    if (properties.drag.active) {
+    if (isDragging) {
+      setIsDragging(false)
+
       setProperties((props) => ({
         ...props,
         drag: {
           ...props.drag,
-          active: false,
         },
         offset: getMouse(offset[0], offset[1])
       }))
     }
-  }, [getMouse, properties, setProperties])
+  }, [getMouse, isDragging, setIsDragging, setProperties])
 
   // render
   return (

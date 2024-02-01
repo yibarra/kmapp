@@ -8,12 +8,12 @@ import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import ToolTip from './ToolTip'
 import type { PointProps } from './interfaces'
+import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
 
 // point
 const Point = ({
   active,
   currentPoint,
-  getCell,
   pointsProperties,
   pointXY,
   setPointXY,
@@ -22,17 +22,19 @@ const Point = ({
   y: yPos,
 }: PointProps) => {
   const { isDragging, setIsDragging } = useContext(UIContext)
-  const { sizeBox } = useContext(GridContext)
+  const { getCell, sizeBox } = useContext(GridContext)
+  const { getMouse } = useContext(ViewportContext)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const element = useRef<any>(null)
   
   // x, y
   const [x, y] = useMemo(() => {
-    const pos = getCell(xPos, yPos)
+    const xy = getMouse(xPos, yPos)
+    const pos = getCell(xy[0], xy[1])
 
     return Array.isArray(pos) ? pos : [0, 0]
-  }, [getCell, xPos, yPos])
+  }, [getCell, getMouse, xPos, yPos])
 
   // on drag start point
   const onDragStartPoint = (event: KonvaEventObject<DragEvent>) => {
@@ -53,23 +55,35 @@ const Point = ({
   const onDragEndPoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
     
-    const point = getCell(event.evt.clientX, event.evt.clientY)
+    const xy = getMouse(event.evt.clientX, event.evt.clientY)
+    const point = getCell(xy[0], xy[1])
 
     if (active && point && element.current) {
-      const posX = Math.floor(point[0])
-      const posY = Math.floor(point[1])
+      const [x, y] = point
 
-      element.current.to({ x: posX, y: posY })
-      setPositionPoint(posX, posY, currentPoint)
+      element.current.to({ x, y })
+      setPositionPoint(x, y, currentPoint)
     }
 
     setIsDragging(false)
   }
 
+  // on move point
+  const onMovePoint = () => {
+    const mouseXY = getMouse(xPos, yPos)
+    const posXY = getCell(mouseXY[0], mouseXY[1]) ?? [0, 0]
+    
+    if (isDragging) {
+      return { x: mouseXY[0], y: mouseXY[1] }
+    }
+
+    return { x: posXY[0], y: posXY[1] }
+  }
+
   // on draw
   const onDraw = (context: Context, shape: ShapeType) => {
     context.beginPath()
-    context.arc(0, 0, (sizeBox / 2) - 2, 0, Math.PI * 2)
+    context.arc(sizeBox / 2, sizeBox / 2, (sizeBox / 2) - 2, 0, Math.PI * 2)
     context.closePath()
     context.strokeShape(shape)
     context.fillShape(shape)
@@ -80,6 +94,7 @@ const Point = ({
     <Group>
       <Shape
         {...pointsProperties}
+        {...onMovePoint()}
         draggable
         listening={active}
         onDragStart={onDragStartPoint}
@@ -88,8 +103,6 @@ const Point = ({
         onDragEnd={onDragEndPoint}
         ref={element}
         sceneFunc={onDraw}
-        x={x}
-        y={y}
       />
 
       <ToolTip

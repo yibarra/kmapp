@@ -20,10 +20,12 @@ const Main = () => {
     loaded,
   } = useContext<MainContextProps>(MainContext)
 
-  const { enable, remove } = useContext(UIContext)
+  const { isDragging, enable, remove } = useContext(UIContext)
   const { data } = useContext(DataContext)
 
   const values = data as LayersProvidersProps['data']['layers']
+
+  console.info(isDragging, 'yeah')
 
   // render
   return (
