@@ -17,9 +17,9 @@ const Stage = ({ size }: StageProps) => {
   // bind events
   const bind = useGesture(
     {
-      onDrag: ({ event, offset: [x, y] }) => onMove(x, y, event),
-      onDragEnd: () => onMoveEnd(),
-      onDragStart: ({ offset: [x, y] }) => onDrag(x, y),
+      onDrag: ({ event, offset }) => onMove(offset, event),
+      onDragEnd: ({ delta }) => onMoveEnd(delta),
+      onDragStart: () => onDrag(),
     }
   )
 
