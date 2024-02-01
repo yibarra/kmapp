@@ -3,11 +3,11 @@ import { Shape as LineKonva } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
+import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { LineProps } from './interfaces'
 import type { CurveType } from '../../../providers/LayersProvider/interfaces'
 import type { PointTypePosition } from '../Point/interfaces'
-import { GridContext } from '../../../providers/GridProvider/GridProvider'
 
 // line
 const Line = ({
@@ -123,10 +123,10 @@ const Line = ({
     for (const line of lines) {
       if (line) {
         const [ xL, yL, move ] = line
+        const radius = sizeBox / 2
 
         if (!isDragging) {
           const [cx, cy] = getCell(xL, yL) ?? [0, 0]
-          const radius = sizeBox / 2
 
           if (move) {
             context.moveTo(cx + radius, cy + radius)

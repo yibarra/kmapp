@@ -21,7 +21,7 @@ const Point = ({
   x: xPos,
   y: yPos,
 }: PointProps) => {
-  const { isDragging, setIsDragging } = useContext(UIContext)
+  const { isDragging } = useContext(UIContext)
   const { getCell, sizeBox } = useContext(GridContext)
   const { getMouse } = useContext(ViewportContext)
 
@@ -39,8 +39,6 @@ const Point = ({
   // on drag start point
   const onDragStartPoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
-
-    setIsDragging(true)
   }
 
   // on drag move point
@@ -64,8 +62,6 @@ const Point = ({
       element.current.to({ x, y })
       setPositionPoint(x, y, currentPoint)
     }
-
-    setIsDragging(false)
   }
 
   // on move point
@@ -73,7 +69,7 @@ const Point = ({
     const mouseXY = getMouse(xPos, yPos)
     const posXY = getCell(mouseXY[0], mouseXY[1]) ?? [0, 0]
     
-    if (isDragging) {
+    if (active && isDragging) {
       return { x: mouseXY[0], y: mouseXY[1] }
     }
 
@@ -82,8 +78,10 @@ const Point = ({
 
   // on draw
   const onDraw = (context: Context, shape: ShapeType) => {
+    const size = isDragging ? 0 : sizeBox / 2
+
     context.beginPath()
-    context.arc(sizeBox / 2, sizeBox / 2, (sizeBox / 2) - 2, 0, Math.PI * 2)
+    context.arc(size, size, (sizeBox / 2) - 2, 0, Math.PI * 2)
     context.closePath()
     context.strokeShape(shape)
     context.fillShape(shape)

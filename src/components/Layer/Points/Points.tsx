@@ -35,7 +35,13 @@ const Points = ({
         shape.fill('#FF8877') // pointsProperties.fill ?? '#222'
 
         if (isDragging) {
-          context.arc(x, y, radius, 0, Math.PI * 2, false)
+          if (active) {
+            const pos = getCell(x, y) ?? [0, 0]
+            
+            context.arc(pos[0], pos[1], radius, 0, Math.PI * 2, false)
+          } else {
+            context.arc(x, y, radius, 0, Math.PI * 2, false)
+          }
         } else {
           const pos = getCell(x, y)
 
