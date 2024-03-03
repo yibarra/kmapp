@@ -10,10 +10,12 @@ import type { PointsProps } from './interfaces'
 
 const Points = ({
   active,
+  curves,
   radius,
   points,
   pointXY,
   pointsProperties,
+  setAnchorXY,
   setPointXY,
   setUpdateLayer
 }: PointsProps) => {
@@ -51,9 +53,15 @@ const Points = ({
     const { evt: { clientX, clientY }} = event
 
     if (active) {
-      const point = getNearestPosition([clientX, clientY], points, radius * 3)
+      const point = getNearestPosition([clientX, clientY], points, radius)
 
       if (point) {
+        const anchor = curves.find((cur) => cur.pointEnd === point.position || cur.pointInit === point.position)
+
+        if (anchor) {
+          setAnchorXY({ x: anchor.curve[0], y: anchor.curve[1] })
+        }
+
         setPointXY({ ...point })
         setUpdateLayer(point.position)
       }

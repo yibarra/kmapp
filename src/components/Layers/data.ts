@@ -98,6 +98,10 @@ export const dataLayers = {
         pointInit: 6,
         pointEnd: 7,
         curve: [500, 400]
+      }, {
+        pointInit: 10,
+        pointEnd: 11,
+        curve: [700, 600]
       }],
       "drag": {
         "offset": [0, 0],

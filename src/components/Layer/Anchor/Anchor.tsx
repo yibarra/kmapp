@@ -12,7 +12,7 @@ import type { AnchorProps } from './interfaces'
 import { calculateDashArray, getDistance } from '../../../providers/GridProvider/helpers'
 
 // anchor
-const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setAnchorXY }: AnchorProps) => {
+const Anchor = ({ anchorXY, currentPoint, curves, points, pointXY, setAnchorXY }: AnchorProps) => {
   const { isAnchor, isDragging } = useContext(UIContext)
   const { sizeBox } = useContext(GridContext)
 
@@ -121,7 +121,6 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
         <Point
           {...curve}
           index={key}
-          getCell={getCell}
           key={key}
           size={sizeBox}
           setAnchorXY={setAnchorXY}

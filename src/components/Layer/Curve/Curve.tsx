@@ -19,13 +19,11 @@ const Curve = ({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const elementLayerRef = useRef<any>(null)
 
-  const { isAnchor, isDragging } = useContext(UIContext)
+  const { isDragging, isAnchor } = useContext(UIContext)
 
   // draw line
   const drawLine = (context: Context, shape: Shape) => {
     context.beginPath()
-
-    const parentCurve = curves.find((cv) => cv.pointEnd === currentPoint)
 
     // draw curves
     for (let k = 0; k < curves.length; k++) {
@@ -37,6 +35,7 @@ const Curve = ({
       if (pointInit && pointEnd) {
         const pointCurveInit = [pointInit.x, pointInit.y]
         const pointCurveEnd = [pointEnd.x, pointEnd.y]
+        const [xC, yC] = curve.curve
 
         if (pointCurveInit) {
           if (active && isDragging && pointInit.position === currentPoint) {
@@ -45,33 +44,56 @@ const Curve = ({
             context.moveTo(pointCurveInit[0], pointCurveInit[1])
           }
 
-          if (active && isAnchor && anchorXY.index === k) {
-            const [x, y] = [anchorXY.x, anchorXY.y]
-
-            context.quadraticCurveTo(
-              x,
-              y,
-              pointCurveEnd[0],
-              pointCurveEnd[1],
-            )
-          } else {
-            if (active && isDragging && parentCurve) {
-              if (parentCurve === curve && parentCurve.pointEnd === pointEnd.position) {
-                const [xC, yC] = [anchorXY.x, anchorXY.y]
-
+          if (active) {
+            if (isDragging && !isAnchor) {
+              if (pointInit.position === currentPoint) {
+                context.quadraticCurveTo(
+                  xC,
+                  yC,
+                  pointCurveEnd[0],
+                  pointCurveEnd[1],
+                )
+                
+              } else if (pointEnd.position === currentPoint) {
                 context.quadraticCurveTo(
                   xC,
                   yC,
                   pointXY.x,
-                  pointXY.y
+                  pointXY.y,
                 )
-
-                continue
+              } else {
+                context.quadraticCurveTo(
+                  xC,
+                  yC,
+                  pointCurveEnd[0],
+                  pointCurveEnd[1],
+                )
               }
+            } else if (isAnchor) {
+              if (anchorXY.index === k) {
+                context.quadraticCurveTo(
+                  anchorXY.x,
+                  anchorXY.y,
+                  pointCurveEnd[0],
+                  pointCurveEnd[1],
+                )
+              } else {
+                context.quadraticCurveTo(
+                  xC,
+                  yC,
+                  pointCurveEnd[0],
+                  pointCurveEnd[1],
+                )
+              }
+            } else {
+              context.quadraticCurveTo(
+                xC,
+                yC,
+                pointCurveEnd[0],
+                pointCurveEnd[1],
+              )
             }
-
-            const [xC, yC] = [anchorXY.x, anchorXY.y]
-
+          } else {
             context.quadraticCurveTo(
               xC,
               yC,

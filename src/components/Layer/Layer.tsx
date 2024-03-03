@@ -15,13 +15,13 @@ import { ViewportContext } from '../../providers/ViewportProvider/ViewportProvid
 import { KonvaEventObject } from 'konva/lib/Node'
 
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
-  const { getCell, sizeBox } = useContext(GridContext)
+  const { sizeBox } = useContext(GridContext)
   const { updateLayer, updateLayerPoint } = useContext(LayersContext)
 
   const { active, currentPoint, points, pointsProperties } = props
 
   const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>(props.points[currentPoint])
-  const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0 })
+  const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0, index: 0 })
   
   const radius = (sizeBox / 2) - 2
 
@@ -59,7 +59,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
     const { evt } = event
 
     if (evt && typeof onMove === 'function') {
-      onMove([evt.clientX, evt.clientY], evt)
+      onMove([evt.movementX, evt.movementY], evt)
     }
   }, [onMove])
 
@@ -95,11 +95,13 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
       <Points
         active={active}
+        curves={props.curves}
         currentPoint={currentPoint}
         radius={radius}
         points={points}
         pointXY={pointXY}
         pointsProperties={pointsProperties}
+        setAnchorXY={setAnchorXY}
         setUpdateLayer={setUpdateLayer}
         setPointXY={setPointXY}
       />
@@ -115,13 +117,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
       />
 
       {active && (
-        <Anchor
-          {...props}
-          anchorXY={anchorXY}
-          getCell={getCell}
-          pointXY={pointXY}
-          setAnchorXY={setAnchorXY}
-        />
+        <Anchor {...props} anchorXY={anchorXY} pointXY={pointXY} setAnchorXY={setAnchorXY} />
       )}
     </Group>
   )
