@@ -28,6 +28,9 @@ export interface LayerPointsProperties extends Omit<LayerLineProperties, 'tensio
 
 export interface LayerProps {
   curves: CurveType[]
+  drag: {
+    offset: number[]
+  }
   id: number
   name: string
   currentPoint: number

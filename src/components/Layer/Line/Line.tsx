@@ -3,7 +3,6 @@ import { Shape as LineKonva } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
 
-import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { LineProps } from './interfaces'
 import type { CurveType } from '../../../providers/LayersProvider/interfaces'
@@ -14,15 +13,12 @@ const Line = ({
   active = false,
   currentPoint,
   curves,
-  getMouse,
-  points,
   lineProperties,
+  points,
   pointXY,
 }: LineProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const elementLayerRef = useRef<any>(null)
-
-  const { getCell, sizeBox } = useContext(GridContext)
   const { isDragging } = useContext(UIContext)
 
   // find point curve
@@ -61,12 +57,11 @@ const Line = ({
       const item = items[index]
 
       if (item) {
-        const point = getMouse(item.x, item.y, true)
+        const point = [item.x, item.y]
   
         if (point) {
           const { element } = findPointCurve(index)
-          const x: number = Math.floor(point[0])
-          const y: number = Math.floor(point[1])
+          const [x, y] = point
 
           if (element) {
             if (element.pointInit === index && element.pointInit < element.pointEnd) {
@@ -75,12 +70,10 @@ const Line = ({
               } else {
                 result.push([x, y, 0])
               }
+            } else if (active && isDragging && currentPoint === item.position) {
+              result.push([pointXY.x, pointXY.y, 1])
             } else {
-              if (active && isDragging && currentPoint === item.position) {
-                result.push([pointXY.x, pointXY.y, 1])
-              } else {
-                result.push([x, y, 1])
-              }
+              result.push([x, y, 1])
             }
           }
           
@@ -122,23 +115,12 @@ const Line = ({
     // draw points
     for (const line of lines) {
       if (line) {
-        const [ xL, yL, move ] = line
-        const radius = sizeBox / 2
+        const [ cx, cy, move ] = line
 
-        if (!isDragging) {
-          const [cx, cy] = getCell(xL, yL) ?? [0, 0]
-
-          if (move) {
-            context.moveTo(cx + radius, cy + radius)
-          } else {
-            context.lineTo(cx + radius, cy + radius)
-          }
+        if(move) {
+          context.moveTo(cx, cy)
         } else {
-          if (move) {
-            context.moveTo(xL, yL)
-          } else {
-            context.lineTo(xL, yL)
-          }
+          context.lineTo(cx, cy)
         }
       }
     }

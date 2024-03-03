@@ -8,7 +8,7 @@ import { MainContext } from '../../../../providers/MainProvider/MainProvider'
 import type { TooltipProps } from './interfaces'
 
 // tooltip
-const Tooltip = ({ anchorXY, curves, getCell, isAnchor = false, size }: TooltipProps) => {
+const Tooltip = ({ anchorXY, curves, isAnchor = false, size }: TooltipProps) => {
   const { viewport } = useContext(MainContext)
 
   // checked
@@ -51,7 +51,7 @@ const Tooltip = ({ anchorXY, curves, getCell, isAnchor = false, size }: TooltipP
     const point = curves.find((_, index) => index === anchorXY.index)
 
     if (point) {
-      const posXY = getCell(point.curve[0], point.curve[1]) ?? [0, 0]
+      const posXY = [point.curve[0], point.curve[1]]
       
       context.beginPath()
       shape.fill('#222')

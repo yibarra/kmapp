@@ -8,15 +8,13 @@ import type { ViewportContextProps, ViewportProviderProps } from './interfaces'
 const ViewportContext = createContext({} as ViewportContextProps)
 
 // Viewport Provider
-const ViewportProvider = ({ children, height, width }: ViewportProviderProps) => {
+const ViewportProvider = ({ children, drag, height, width }: ViewportProviderProps) => {
   const { isDragging, setIsDragging } = useContext(UIContext)
     
   // properties
   const [properties, setProperties] = useState({
     center: [width / 2, height / 2],
-    drag: {
-      offset: [0, 0],
-    },
+    drag,
     offset: scale([width / 2, height / 2], -1),
   })
 
@@ -65,10 +63,10 @@ const ViewportProvider = ({ children, height, width }: ViewportProviderProps) =>
         drag: {
           ...props.drag,
         },
-        offset: getMouse(offset[0], offset[1])
+        offset
       }))
     }
-  }, [getMouse, isDragging, setIsDragging, setProperties])
+  }, [isDragging, setIsDragging, setProperties])
 
   // render
   return (

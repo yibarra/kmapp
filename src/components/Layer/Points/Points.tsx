@@ -7,26 +7,24 @@ import type { KonvaEventObject } from 'konva/lib/Node'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import { getNearestPosition } from '../../../providers/GridProvider/helpers'
 import type { PointsProps } from './interfaces'
-import { GridContext } from '../../../providers/GridProvider/GridProvider'
 
 const Points = ({
   active,
-  getMouse,
   radius,
   points,
+  pointXY,
   pointsProperties,
   setPointXY,
   setUpdateLayer
 }: PointsProps) => {
   const { isDragging } = useContext(UIContext)
-  const { getCell, sizeBox } = useContext(GridContext)
 
   // draw points
   const onDraw = (context: Context, shape: ShapeType) => {
     context.beginPath()
 
     for (const point of points) {
-      const [x, y] = getMouse(point.x, point.y, true)
+      const { x, y } = point
       
       if (active && isDragging) {
         shape.fill(pointsProperties.fill ?? '#222')
@@ -35,20 +33,10 @@ const Points = ({
         shape.fill('#FF8877') // pointsProperties.fill ?? '#222'
 
         if (isDragging) {
-          if (active) {
-            const pos = getCell(x, y) ?? [0, 0]
-            
-            context.arc(pos[0], pos[1], radius, 0, Math.PI * 2, false)
-          } else {
-            context.arc(x, y, radius, 0, Math.PI * 2, false)
-          }
+          context.arc(pointXY.x, pointXY.y, radius, 0, Math.PI * 2, false)
         } else {
-          const pos = getCell(x, y)
-
-          if (pos) {
-            shape.fill('#FF00FF')
-            context.arc(pos[0] + (sizeBox / 2), pos[1] + (sizeBox / 2), radius, 0, Math.PI * 2, false)
-          }
+          shape.fill('#FF00FF')
+          context.arc(x, y, radius, 0, Math.PI * 2, false)
         }
       }
       
@@ -62,15 +50,11 @@ const Points = ({
   const onClickPoint = (event: KonvaEventObject<MouseEvent>) => {
     const { evt: { clientX, clientY }} = event
 
-    const pos = getCell(clientX, clientY)
-
-    if (pos && active) {
-      const point = getNearestPosition([pos[0], pos[1]], points, radius * 3)
+    if (active) {
+      const point = getNearestPosition([clientX, clientY], points, radius * 3)
 
       if (point) {
-        const restPos = getCell(pos[0], pos[1]) ?? [0, 0]
-  
-        setPointXY({ x: restPos[0], y: restPos[1] })
+        setPointXY({ ...point })
         setUpdateLayer(point.position)
       }
     }

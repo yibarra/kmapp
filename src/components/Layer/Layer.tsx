@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { Group } from 'react-konva'
 
 import { GridContext } from '../../providers/GridProvider/GridProvider'
@@ -12,11 +12,11 @@ import type { PointTypePosition } from './Point/interfaces'
 import type { PointAnchorPosition } from './Anchor/interfaces'
 import Points from './Points'
 import { ViewportContext } from '../../providers/ViewportProvider/ViewportProvider'
+import { KonvaEventObject } from 'konva/lib/Node'
 
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const { getCell, sizeBox } = useContext(GridContext)
   const { updateLayer, updateLayerPoint } = useContext(LayersContext)
-  const { getMouse, properties } = useContext(ViewportContext)
 
   const { active, currentPoint, points, pointsProperties } = props
 
@@ -42,33 +42,63 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
       }, currentPoint
     )
   }
+
+  const { setPos } = useContext(GridContext)
+  const { onDrag, onMove, onMoveEnd } = useContext(ViewportContext)
+
+  // handlers
+  const onClickHandler = useCallback((event: KonvaEventObject<MouseEvent>) => {
+    const { evt } = event
+
+    if (evt && typeof setPos === 'function') {
+      setPos([evt.clientX, evt.clientY], [evt.view?.innerWidth ?? 0, evt.view?.innerHeight ?? 0])
+    }
+  }, [setPos])
+
+  const onDragHandler = useCallback((event: KonvaEventObject<DragEvent>) => {
+    const { evt } = event
+
+    if (evt && typeof onMove === 'function') {
+      onMove([evt.clientX, evt.clientY], evt)
+    }
+  }, [onMove])
+
+  const onDragEndHandler = useCallback((event: KonvaEventObject<DragEvent>) => {
+    const { evt } = event
+
+    if (evt && typeof onMoveEnd === 'function') {
+      onMoveEnd([evt.offsetX, evt.offsetY])
+    }
+  }, [onMoveEnd])
+
+  const onDragStartHandler = useCallback((event: KonvaEventObject<DragEvent>) => {
+    const { evt } = event
+
+    if (evt && typeof onDrag === 'function') {
+      onDrag()
+    }
+  }, [onDrag])
   
   // render
   return (
-    <Group opacity={active ? 1 : 0.1}>
-      <Line
-        {...props}
-        anchorXY={anchorXY}
-        getCell={getCell}
-        getMouse={getMouse}
-        pointXY={pointXY}
-      />
+    <Group
+      draggable={active}
+      onClick={onClickHandler}
+      onDragEnd={onDragEndHandler}
+      onDragMove={onDragHandler}
+      onDragStart={onDragStartHandler}
+      opacity={active ? 1 : 0.1}
+    >
+      <Line {...props} anchorXY={anchorXY} pointXY={pointXY} />
 
-      <Curve
-        {...props}
-        anchorXY={anchorXY}
-        getCell={getCell}
-        getMouse={getMouse}
-        pointXY={pointXY}
-      />
+      <Curve {...props} anchorXY={anchorXY} pointXY={pointXY} />
 
       <Points
         active={active}
         currentPoint={currentPoint}
-        getMouse={getMouse}
         radius={radius}
         points={points}
-        properties={properties}
+        pointXY={pointXY}
         pointsProperties={pointsProperties}
         setUpdateLayer={setUpdateLayer}
         setPointXY={setPointXY}

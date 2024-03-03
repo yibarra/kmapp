@@ -17,6 +17,7 @@ export interface ViewportContextProps {
 }
 
 export interface ViewportProviderProps extends PropsWithChildren {
+  drag: propertiesType['drag']
   height: number
   width: number
 }

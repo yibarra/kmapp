@@ -6,7 +6,7 @@ import { LayersContext } from '../../../../providers/LayersProvider'
 import { UIContext } from '../../../../providers/UIProvider/UIProvider'
 import type { PointAnchorProps } from './interfaces'
 
-const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }: PointAnchorProps) => {
+const Point = ({ curve, index, pointInit, pointEnd, setAnchorXY, size }: PointAnchorProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pointRef = useRef<any>(null)
 
@@ -14,7 +14,7 @@ const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }
   const { updateLayerCurvePoint } = useContext(LayersContext)
 
   const radius = (size / 2) - 2
-  const posXY = getCell(curve[0], curve[1]) ?? [0, 0]
+  const posXY = [curve[0], curve[1]]
 
   // on drag start point
   const onDragStartPoint = (event: KonvaEventObject<DragEvent>) => {
@@ -35,10 +35,10 @@ const Point = ({ curve, getCell, index, pointInit, pointEnd, setAnchorXY, size }
   const onDragEndPoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
-    const pos = getCell(event.target.x(), event.target.y()) ?? [0, 0]
+    const pos = [event.target.x(), event.target.y()]
 
-    updateLayerCurvePoint(index, pointInit, pointEnd, [pos[0], pos[1]])
     setIsAnchor(false)
+    updateLayerCurvePoint(index, pointInit, pointEnd, [pos[0], pos[1]])
   }
 
   // render

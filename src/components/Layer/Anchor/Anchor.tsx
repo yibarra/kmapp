@@ -7,7 +7,6 @@ import Point from './Point'
 import Tooltip from './Tooltip'
 import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
-import type { AxisType } from '../../Grid/interfaces'
 import type { PointTypePosition } from '../Point/interfaces'
 import type { AnchorProps } from './interfaces'
 import { calculateDashArray, getDistance } from '../../../providers/GridProvider/helpers'
@@ -30,7 +29,7 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
 
   // create point line
   const createPointLine = (context: Context, point: PointTypePosition, shape: ShapeType) => {
-    const posXY = getCell(point.x, point.y) ?? [0, 0]
+    const posXY = [point.x, point.y]
 
     if (pointXY) {
       shape.fill('#222')
@@ -51,7 +50,7 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
   }
 
   // create line
-  const createLine = (context: Context, curvePos: AxisType, anchorPoints: boolean, point: number[]) => {
+  const createLine = (context: Context, curvePos: number[], anchorPoints: boolean, point: number[]) => {
     if (isAnchor && anchorPoints) {
       const dist = getDistance(curvePos, [anchorXY.x, anchorXY.y])
       
@@ -66,8 +65,8 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
   }
 
   // create line anchor
-  const createLineAnchor = (context: Context, shape: ShapeType, curvePos: AxisType, point: PointTypePosition, anchors: boolean) => {
-    const pointCurve = getCell(point.x, point.y) ?? [0, 0]
+  const createLineAnchor = (context: Context, shape: ShapeType, curvePos: number[], point: PointTypePosition, anchors: boolean) => {
+    const pointCurve = [point.x, point.y]
 
     if (pointCurve) {
       movePoint(context, pointCurve, point.position)
@@ -95,7 +94,7 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
         const pointEnd = points.find((p) => p.position === curve.pointEnd)
 
         if (pointInit && pointEnd) {
-          const curvePos = getCell(curve.curve[0], curve.curve[1])
+          const curvePos = curve.curve
 
           if (curvePos) {
             const anchors = (k === anchorXY.index)
@@ -134,7 +133,6 @@ const Anchor = ({ anchorXY, currentPoint, curves, getCell, points, pointXY, setA
         curves={curves}
         currentPoint={currentPoint}
         isAnchor={isAnchor}
-        getCell={getCell}
         points={points}
         size={sizeBox / 4}
       />
