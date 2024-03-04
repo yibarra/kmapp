@@ -5,6 +5,7 @@ import type { Shape as ShapeType } from 'konva/lib/Shape'
 import type { KonvaEventObject } from 'konva/lib/Node'
 
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
+import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
 import { getNearestPosition } from '../../../providers/GridProvider/helpers'
 import type { PointsProps } from './interfaces'
 
@@ -20,6 +21,7 @@ const Points = ({
   setUpdateLayer
 }: PointsProps) => {
   const { isDragging } = useContext(UIContext)
+  const { getMouse } = useContext(ViewportContext)
 
   // draw points
   const onDraw = (context: Context, shape: ShapeType) => {
@@ -53,7 +55,7 @@ const Points = ({
     const { evt: { clientX, clientY }} = event
 
     if (active) {
-      const point = getNearestPosition([clientX, clientY], points, radius)
+      const point = getNearestPosition(getMouse(clientX, clientY), points, radius)
 
       if (point) {
         const anchor = curves.find((cur) => cur.pointEnd === point.position || cur.pointInit === point.position)

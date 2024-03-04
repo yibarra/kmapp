@@ -16,6 +16,7 @@ const ViewportProvider = ({ children, drag, height, width }: ViewportProviderPro
     center: [width / 2, height / 2],
     drag,
     offset: scale([width / 2, height / 2], -1),
+    zoom: 1,
   })
 
   // get mouse
@@ -29,26 +30,18 @@ const ViewportProvider = ({ children, drag, height, width }: ViewportProviderPro
   }, [properties])
 
   // on drag
-  const onDrag = useCallback(() =>  {
-    setIsDragging(true)
-
-    setProperties((props) => ({
-      ...props,
-      drag: {
-        ...props.drag,
-      }
-    }))
-  }, [setIsDragging, setProperties])
+  const onDrag = useCallback(() =>  setIsDragging(true), [setIsDragging])
 
   // on move
   const onMove = useCallback((offset: number[], event: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent) => {
     if (isDragging && event.shiftKey) {
+      console.info('auer', offset)
       setProperties((props) => ({
         ...props,
         drag: {
           ...props.drag,
-          offset
-        }
+        },
+        offset
       }))
     }
   }, [isDragging, setProperties])
