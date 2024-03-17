@@ -29,17 +29,21 @@ const Points = ({
 
     for (const point of points) {
       const { x, y } = point
+
       
       if (active && isDragging) {
         shape.fill(pointsProperties.fill ?? '#222')
         context.arc(x, y, radius, 0, Math.PI * 2, false)
       } else {
-        shape.fill('#FF8877') // pointsProperties.fill ?? '#222'
-
-        if (isDragging) {
-          context.arc(pointXY.x, pointXY.y, radius, 0, Math.PI * 2, false)
+        shape.fill(pointsProperties.fill ?? '#222')
+      
+        if (active) {
+          if (isDragging) {
+            context.arc(pointXY.x, pointXY.y, radius, 0, Math.PI * 2, false)
+          } else {
+            context.arc(x, y, radius, 0, Math.PI * 2, false)
+          }
         } else {
-          shape.fill('#FF00FF')
           context.arc(x, y, radius, 0, Math.PI * 2, false)
         }
       }

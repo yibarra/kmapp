@@ -41,7 +41,7 @@ const ToolTip = ({ isDragging = false, point, radius, pointXY, size }: ToolTipPr
     context.font = '12px Roboto Condensed'
     context.textBaseline = 'middle'
     shape.fill('#222')
-    context.fillText(`(${posXY[0]}px, ${posXY[1]}px)`, posXY[0] + (size / 2), posXY[1])
+    context.fillText(`(${posXY[0]}px, ${posXY[1]}px)`, posXY[0] + (size), posXY[1])
 
     context.closePath()
     context.fillShape(shape)

@@ -6,6 +6,7 @@ import * as S from './styles'
 
 // controls layers item
 const Item = ({
+  active,
   current,
   deleteLayer,
   index,
@@ -58,7 +59,7 @@ const Item = ({
 
   // render
   return (
-    <S.ControlsLayersItemDiv style={{ border: current ? '1px solid red' : '', overflow: current ? 'initial' : 'hidden' }}>
+    <S.ControlsLayersItemDiv style={{ border: active ? '1px solid red' : '', overflow: active ? 'initial' : 'hidden' }}>
       <S.ControlsLayersItemHeaderDiv>
         <input
           type="text"
@@ -80,12 +81,12 @@ const Item = ({
           </span>
         </button>
 
-        <button onClick={() => setCurrent(index)}>
+        <button onClick={() => setCurrent(active ? null : index)}>
           active
         </button>
       </S.ControlsLayersItemHeaderDiv>
 
-      <S.ControlsLayersItemContainer toggle={current ? 'true' : 'false'}>
+      <S.ControlsLayersItemContainer toggle={active ? 'true' : 'false'}>
         <div style={{ display: 'flex', alignItems: 'stretch', gap: 5, justifyContent: 'flex-start' }}>
           <SelectorSize
             strokeColor={layer.lineProperties.stroke}

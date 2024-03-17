@@ -8,7 +8,7 @@ const LayersContext = createContext({} as LayersContextProps)
 
 // layers provider
 const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProvidersProps) => {
-  const [current, setCurrent] = useState(0) // index current
+  const [current, setCurrent] = useState<number | null>(null) // index current
   const [layers, setLayers] = useState<LayerProps[]>(dataInit.layers)
 
   // update layer
@@ -36,7 +36,7 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
 
   // create curve
   const createLayerCurve = useCallback((pointInit: PointTypePosition, pointEnd: PointTypePosition) => {
-    if (!pointInit || !pointEnd) {
+    if (!pointInit || !pointEnd || current === null) {
       return false
     }
 
@@ -59,7 +59,7 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
 
   // update layer points
   const createLayerPoint = useCallback((index: number, point: PointTypePosition): void | boolean => {
-    if (!enable) {
+    if (!enable || typeof current !== 'number') {
       return false
     }
 
@@ -84,12 +84,16 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
 
   // remove layer point item
   const deleteLayerCurve = useCallback((index: number): CurveType[] => {
+    if (typeof current !== 'number') {
+      return []
+    }
+
     const curves = []
+
     const curvesRemoves = getPointExistInCurve(layers[current].curves, index)
 
     if (Array.isArray(curvesRemoves)) {
-      for (let j = 0; j < curvesRemoves.length; j++) {
-        const curve = curvesRemoves[j]
+      for (const curve of curvesRemoves) {
         const indexCurve = layers[current].curves.indexOf(curve)
 
         if (indexCurve === -1) {
@@ -103,7 +107,7 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
 
   // remove layer point
   const deleteLayerPoint = useCallback((index: number): void | boolean => {
-    if (!remove) {
+    if (!remove || typeof current !== 'number') {
       return false
     }
 
@@ -132,10 +136,12 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
 
   // update layer point
   const updateLayerPoint = useCallback((point: PointTypePosition, index: number): void => {
-    const { points } = layers[current]
-    points[index] = point
-
-    updateLayer(current, { ...layers[current], points })
+    if (typeof current === 'number') {
+      const { points } = layers[current]
+      points[index] = point
+  
+      updateLayer(current, { ...layers[current], points })
+    }
   }, [current, layers, updateLayer])
 
   // update layer curve point
@@ -145,23 +151,25 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
     end: number,
     curve: number[]
   ) => {
-    const { points, curves: curveOld } = layers[current]
-    const item = curveOld[index] // current curve
-    
-    if (item) {
-      const curves = [...curveOld]
+    if (typeof current === 'number') {
+      const { points, curves: curveOld } = layers[current]
+      const item = curveOld[index] // current curve
+      
+      if (item) {
+        const curves = [...curveOld]
 
-      const pointInit = getPointByPosition(points, init)
-      const pointEnd = getPointByPosition(points, end)
+        const pointInit = getPointByPosition(points, init)
+        const pointEnd = getPointByPosition(points, end)
 
-      if (pointInit && pointEnd) {
-        curves[index] = {
-          curve,
-          pointInit: pointInit.position,
-          pointEnd: pointEnd.position,
+        if (pointInit && pointEnd) {
+          curves[index] = {
+            curve,
+            pointInit: pointInit.position,
+            pointEnd: pointEnd.position,
+          }
+
+          updateLayer(current, { ...layers[current], curves })
         }
-
-        updateLayer(current, { ...layers[current], curves })
       }
     }
   }

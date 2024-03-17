@@ -13,8 +13,9 @@ const Layers = () => {
     <S.LayersWrapper>
       {Array.isArray(layers) && layers.map((layer, index) => (
         <Item
+          active={current === index}
           layer={layer}
-          current={current === index}
+          current={current}
           index={index}
           setCurrent={setCurrent}
           updateLayer={updateLayer}

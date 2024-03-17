@@ -16,7 +16,7 @@ import type { PointAnchorPosition } from './Anchor/interfaces'
 // layer
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const { sizeBox } = useContext(GridContext)
-  const { updateLayer, updateLayerPoint } = useContext(LayersContext)
+  const { current, updateLayer, updateLayerPoint } = useContext(LayersContext)
 
   const { active, currentPoint, points, pointsProperties } = props
 
@@ -45,7 +45,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   
   // render
   return (
-    <Group opacity={active ? 1 : 0.1}>
+    <Group opacity={active || current === null ? 1 : 0.1}>
       <Line {...props} anchorXY={anchorXY} pointXY={pointXY} />
 
       <Curve {...props} anchorXY={anchorXY} pointXY={pointXY} />

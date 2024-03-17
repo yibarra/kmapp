@@ -84,13 +84,15 @@ const Point = ({
         y={yPos}
       />
 
-      <ToolTip
-        isDragging={isDragging}
-        radius={pointsProperties.radius}
-        size={sizeBox}
-        point={[xPos, yPos]}
-        pointXY={pointXY}
-      />
+      {active && (
+        <ToolTip
+          isDragging={isDragging}
+          radius={pointsProperties.radius}
+          size={sizeBox}
+          point={[xPos, yPos]}
+          pointXY={pointXY}
+        />
+      )}
     </Group>
   )
 }
