@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import ComboBox from '../../ComboBox'
 
 import type { SelectorLineTypeProps } from './interfaces'
 import * as S from './styles'
@@ -11,31 +10,28 @@ const SelectorLineType: React.FC<SelectorLineTypeProps> = ({
   onChangeValue,
   variant = 'join'
 }) => {
-  const [current, setCurrent] = useState<number>(defaultValue)
+  const [current, setCurrent] = useState(defaultValue)
 
   // render
   return (
     <S.SelectorLineTypeDiv>
-      <ComboBox
-        callback={(value: any) => {
-          onChangeValue(items[current].name)
-          setCurrent(value)
-        }}
-        max={items.length - 1}
-        min={0}
-        value={current}
-      >
-        {items.map(({ name }: any, index: number) =>
-          <S.SelectorLineTypeItemDiv active={String(current === index)} key={index}>
-            {(variant === 'join')
-              ? <S.SelectorLineTypeIconJoin type={name}>
-                  <span></span>
-                </S.SelectorLineTypeIconJoin>
-              : <S.SelectorLineTypeIconCap type={name} />
-            }
-          </S.SelectorLineTypeItemDiv>
-        )}
-      </ComboBox>
+      {items.map(({ name = '' }, index: number) =>
+        <S.SelectorLineTypeItemDiv
+          active={String(current === index)}
+          onClick={() => {
+            onChangeValue(name)
+            setCurrent(index)
+          }}
+          key={index}
+        >
+          {(variant === 'join')
+            ? <S.SelectorLineTypeIconJoin type={name}>
+                <span></span>
+              </S.SelectorLineTypeIconJoin>
+            : <S.SelectorLineTypeIconCap type={name} />
+          }
+        </S.SelectorLineTypeItemDiv>
+      )}
     </S.SelectorLineTypeDiv>
   )
 }

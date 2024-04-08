@@ -7,7 +7,6 @@ import * as S from './styles'
 // controls layers item
 const Item = ({
   active,
-  current,
   deleteLayer,
   index,
   layer,
@@ -59,7 +58,7 @@ const Item = ({
 
   // render
   return (
-    <S.ControlsLayersItemDiv style={{ border: active ? '1px solid red' : '', overflow: active ? 'initial' : 'hidden' }}>
+    <S.ControlsLayersItemDiv style={{ overflow: active ? 'initial' : 'hidden' }}>
       <S.ControlsLayersItemHeaderDiv>
         <input
           type="text"
@@ -87,12 +86,8 @@ const Item = ({
       </S.ControlsLayersItemHeaderDiv>
 
       <S.ControlsLayersItemContainer toggle={active ? 'true' : 'false'}>
-        <div style={{ display: 'flex', alignItems: 'stretch', gap: 5, justifyContent: 'flex-start' }}>
-          <SelectorSize
-            strokeColor={layer.lineProperties.stroke}
-            onChangeValue={updateLayerSizeLineProperties}
-            value={layer.lineProperties.strokeWidth}
-          />
+        <S.ControlsLayerProperties>
+          <S.ControlsLayerPropertiesTitle>line properties</S.ControlsLayerPropertiesTitle>
 
           <SelectorColor
             color={layer.lineProperties.stroke}
@@ -100,7 +95,14 @@ const Item = ({
               ...layer.lineProperties,
               stroke,
             }})}
+            text="Color"
             variation="line"
+          />
+
+          <SelectorSize
+            strokeColor={layer.lineProperties.stroke}
+            onChangeValue={updateLayerSizeLineProperties}
+            value={layer.lineProperties.strokeWidth}
           />
 
           <SelectorDash
@@ -134,9 +136,33 @@ const Item = ({
               }})}
             />
           </div>
-        </div>
+        </S.ControlsLayerProperties>
 
-        <div style={{ display: 'inline-flex', gap: 5, alignItems: 'stretch', justifyContent: 'flex-start' }}>
+        <S.ControlsLayerProperties>
+          <S.ControlsLayerPropertiesTitle>points properties</S.ControlsLayerPropertiesTitle>
+          
+          <SelectorColor
+            color={layer.pointsProperties.fill}
+            radius
+            setColor={(fill: string) => updateLayer(index, { pointsProperties: {
+              ...layer.pointsProperties,
+              fill,
+            }})}
+            text="Color"
+            variation="line"
+          />
+
+          <SelectorColor
+            color={layer.pointsProperties.stroke}
+            radius
+            setColor={(stroke: string) => updateLayer(index, { pointsProperties: {
+              ...layer.pointsProperties,
+              stroke,
+            }})}
+            text="Border Color"
+            variation="border"
+          />
+
           <SelectorSize
             fill={layer.pointsProperties.fill}
             onChangeValue={updateLayerSizePointsProperties}
@@ -150,26 +176,7 @@ const Item = ({
             value={layer.pointsProperties.strokeWidth}
             variant="border"
           />
-
-          <SelectorColor
-            color={layer.pointsProperties.stroke}
-            radius
-            setColor={(stroke: string) => updateLayer(index, { pointsProperties: {
-              ...layer.pointsProperties,
-              stroke,
-            }})}
-            variation="border"
-          />
-
-          <SelectorColor
-            color={layer.pointsProperties.fill}
-            radius
-            setColor={(fill: string) => updateLayer(index, { pointsProperties: {
-              ...layer.pointsProperties,
-              fill,
-            }})}
-          />
-        </div>
+        </S.ControlsLayerProperties>
       </S.ControlsLayersItemContainer>
     </S.ControlsLayersItemDiv>
   )

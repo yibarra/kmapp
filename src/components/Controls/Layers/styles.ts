@@ -2,13 +2,16 @@ import styled from 'styled-components'
 
 export const LayersWrapper = styled.div`
   align-items: flex-start;
+  border: 3px solid #222;
+  border-radius: 8px;
   display: flex;
   flex-flow: column wrap;
-  justify-content: center;
+  min-height: calc(100svh - 6px);
+  justify-content: flex-start;
   left: initial;
   right: 0;
   position: absolute;
   top: 0;
-  width: 280px;
+  width: 320px;
   z-index: 10;
 `

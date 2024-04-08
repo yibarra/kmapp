@@ -6,7 +6,11 @@ const inOption = keyframes`
 `;
 
 export const SelectorLineTypeDiv = styled.div`
-  width: 40px;
+  display: flex;
+  gap: 8px;
+  flex-flow: row nowrap;
+  justify-content: center;
+  width: 100%;
 `
 
 export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
@@ -14,7 +18,7 @@ export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
   align-items: center;
   display: none;
   justify-content: center;
-  width: 100%;
+  width: 40px;
 
   ${({ active }) =>
     active ? `display: flex;` : ''}
@@ -167,14 +171,14 @@ export const SelectorLineTypeIconCap = styled.div<{ type: string }>`
         return `
           border-left-width: 0;
           border-right-width: 0;
-          margin: 10px;
+          margin: 10px 0;
         `
       case 'square':
         default:
         return `
           border-left-width: 7px;
           border-right-width: 7px;
-          margin: 10px 5px;
+          margin: 10px 0;
           `
     }
   }}

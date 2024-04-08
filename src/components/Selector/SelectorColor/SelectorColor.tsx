@@ -10,9 +10,10 @@ const SelectorColor= ({
   color,
   radius = false,
   setColor,
+  text = 'Color',
   variation = 'default',
 }: SelectorColorProps) => {
-  const element = useRef<any>(null)
+  const element = useRef(null)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   UseClickOutSide(element, () => setIsOpen(false), '')
@@ -21,32 +22,31 @@ const SelectorColor= ({
   const getType = (variation: string) => {
     switch (variation) {
       case 'line':
-        return { backgroundColor: color, height: 3 }
+        return { backgroundColor: color, borderColor: 'transparent' }
       
       case 'border':
         return { borderColor: color }
         
       case 'default':
       default:
-        return { backgroundColor: color }
+        return { backgroundColor: 'transparent', borderColor: color }
     }
   }
 
   // render
   return (
     <S.SelectorColorDiv type={variation}>
+      <S.SelectorColorText>{text}</S.SelectorColorText>
+
       <S.SelectorColorButton
         radius={radius.toString()}
         onClick={() => setIsOpen(!isOpen)}
         style={getType(variation)}
-        variation={variation}
       />
       
       {isOpen && (
         <S.SelectorColorPopOver ref={element} radius={radius.toString()}>
           <HexColorPicker color={color} onChange={setColor} />
-
-          <S.SelectorColorArrow></S.SelectorColorArrow>
         </S.SelectorColorPopOver>
       )}
     </S.SelectorColorDiv>
