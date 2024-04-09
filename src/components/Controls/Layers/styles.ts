@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const LayersWrapper = styled.div`
   align-items: flex-start;
+  background-color: #FFF;
   border: 3px solid #222;
   border-radius: 8px;
   display: flex;

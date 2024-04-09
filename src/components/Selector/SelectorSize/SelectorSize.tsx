@@ -1,42 +1,27 @@
-import { useState } from 'react'
-
+import type { SelectorSizeProps } from './interfaces'
 import * as S from './styles'
-
-const HEIGHT_MAX = 7
 
 // selector size
 const SelectorSize = ({
-  fill,
   onChangeValue,
+  text = 'Size',
   value,
-  variant = 'line'
-}: any) => {
-  const [current, setCurrent] = useState(value)
+}: SelectorSizeProps) => (
+  <S.SelectorSizeDiv>
+    <S.SelectorSizeText>{text}</S.SelectorSizeText>
 
-  console.info(value, '-0---')
+    <S.SelectorSizeContainer>
+      <S.SelectorSizeInput
+        type="number"
+        onChange={(event) => {
+          const { value = 0 } = event.currentTarget
 
-  // render
-  return (
-    <S.SelectorSizeDiv>
-      <S.SelectorSizeContainer
-        style={
-          {height: variant === 'line' ? HEIGHT_MAX : 30}
-        }
-      >
-        <div>{current}</div>
-
-        <S.SelectorSizeIconBlockDiv
-          style={{
-            backgroundColor: variant !== 'border' ? fill: 'transparent',
-            borderColor: variant === 'border' ? fill : 'transparent',
-            borderWidth: variant === 'border' ? (value / 100) * 40 : 0,
-            transform: variant !== 'border' ? `scale(${(value / 100) * 20})` : ''
-          }}
-          variant={variant}
-        />
-      </S.SelectorSizeContainer>
-    </S.SelectorSizeDiv>
-  )
-}
+          onChangeValue(Number(value))
+        }}
+        value={value}
+      />
+    </S.SelectorSizeContainer>
+  </S.SelectorSizeDiv>
+)
 
 export default SelectorSize

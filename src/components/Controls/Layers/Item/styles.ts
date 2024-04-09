@@ -8,15 +8,22 @@ export const ControlsLayerPropertiesTitle = styled.p`
 `
 
 export const ControlsLayerProperties = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-flow: row wrap;
-  gap: 8px;
+  gap: 32px;
+  padding: 9px 0 ;
   width: 100%;
+
+  &:nth-child(2) {
+    padding-top: 18px;
+  }
 `
 
 export const ControlsLayersItemDiv = styled.div`
   display: flex;
   flex-flow: row wrap;
+  overflow: hidden;
   width: 100%;
   vertical-align: top;
 `

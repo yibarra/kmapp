@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const SelectorColorDiv = styled.div<{ type?: string }>`
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-flow: row wrap;
   position: relative;
   vertical-align: top;

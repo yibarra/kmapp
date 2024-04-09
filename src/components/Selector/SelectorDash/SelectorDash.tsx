@@ -2,9 +2,10 @@ import { useCallback } from 'react'
 import SelectorDashItem from './SelectorDashItem'
 
 import * as S from './styles'
+import type { SelectorDashProps } from './interfaces'
 
 // selector dash
-const SelectorDash = ({ properties, updateDashProperty }: any) => {
+const SelectorDash = ({ properties, updateDashProperty }: SelectorDashProps) => {
   // on change dash
   const onChangeDash = useCallback((value: number, type: string) => {
     const dash = (type === 'gap')
@@ -19,20 +20,25 @@ const SelectorDash = ({ properties, updateDashProperty }: any) => {
     <>
       {Array.isArray(properties.dash) &&
         <S.SelectorDashDiv>
-          <SelectorDashItem
-            max={10}
-            min={0}
-            onChangeDash={onChangeDash}
-            value={properties.dash[0]}
-          />
+          <S.SelectorDashText>Dash</S.SelectorDashText>
 
-          <SelectorDashItem
-            max={10}
-            min={0}
-            onChangeDash={onChangeDash}
-            type="gap"
-            value={properties.dash[1]}
-          />
+          <S.SelectorDashContainer>
+            <SelectorDashItem
+              max={10}
+              min={0}
+              type="default"
+              onChangeDash={onChangeDash}
+              value={properties.dash[0]}
+            />
+
+            <SelectorDashItem
+              max={10}
+              min={0}
+              onChangeDash={onChangeDash}
+              type="gap"
+              value={properties.dash[1]}
+            />
+          </S.SelectorDashContainer>
         </S.SelectorDashDiv>
       }
     </>
@@ -40,26 +46,3 @@ const SelectorDash = ({ properties, updateDashProperty }: any) => {
 }
 
 export default SelectorDash
-/*
-<input
-        name="dash0"
-        type="number"
-        defaultValue="0"
-        onChange={(e) => updateLayer(index, { pointsProperties: {
-          ...layer.pointsProperties,
-          dash: [e.target.value, layer.pointsProperties.dash[1]]
-        }})}
-      />
-
-      <input
-        name="dash1"
-        type="number"
-        defaultValue="0"
-        onChange={(e) => updateLayer(index, { pointsProperties: {
-          ...layer.pointsProperties,
-          dash: [layer.pointsProperties.dash[0], e.target.value]
-        }})}
-      />
-      */
-
-

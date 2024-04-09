@@ -1,6 +1,4 @@
-import React from 'react'
-import ComboBox from '../../../ComboBox'
-
+import type { SelectorDashItemProps } from './interfaces'
 import * as S from './styles'
 
 // selector dash item
@@ -10,18 +8,20 @@ const SelectorDashItem = ({
   onChangeDash,
   type = 'default',
   value,
-}: any) => {
-  // on change value
-  const onChangeValue = (value: number) => {
-    onChangeDash(value, type)
-  }
-  
-  // render
-  return (
-    <ComboBox max={max} min={min} callback={onChangeValue} value={value}>
-      <S.SelectorDashItemP>{value}</S.SelectorDashItemP>
-    </ComboBox>
-  )
-}
+}: SelectorDashItemProps) => (
+  <S.SelectorDashItemP>
+    <S.SelectorDashInput
+      min={min}
+      max={max}
+      onChange={(event) => {
+        if (typeof onChangeDash === 'function') {
+          onChangeDash(Number(event.currentTarget.value), type)
+        }
+      }}
+      type="number"
+      value={value}
+    />
+  </S.SelectorDashItemP>
+)
 
 export default SelectorDashItem

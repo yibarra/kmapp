@@ -1,3 +1,6 @@
 export interface SelectorDashProps {
-  any?: any
+  properties: {
+    dash: number[]
+  }
+  updateDashProperty(props: { dash: number[] }, value: number[]): void
 }

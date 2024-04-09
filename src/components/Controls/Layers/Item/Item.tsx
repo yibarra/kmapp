@@ -2,6 +2,7 @@ import SelectorColor from '../../../Selector/SelectorColor'
 import SelectorDash from '../../../Selector/SelectorDash'
 import SelectorLineType from '../../../Selector/SelectorLineType'
 import SelectorSize from '../../../Selector/SelectorSize'
+import SelectorTension from '../../../Selector/SelectorTension'
 import * as S from './styles'
 
 // controls layers item
@@ -100,13 +101,11 @@ const Item = ({
           />
 
           <SelectorSize
-            strokeColor={layer.lineProperties.stroke}
             onChangeValue={updateLayerSizeLineProperties}
             value={layer.lineProperties.strokeWidth}
           />
 
           <SelectorDash
-            index={index}
             properties={layer.lineProperties}
             updateDashProperty={updateLineDashProperties}
           />
@@ -114,28 +113,21 @@ const Item = ({
           <SelectorLineType
             onChangeValue={updateLayerLineCapProperties}
             items={[{ name: 'round' }, { name: 'butt' }, { name: 'square' }]}
+            title="Line Join"
             variant="cap"
           />
 
           <SelectorLineType
-            onChangeValue={updateLayerLineJoinProperties}
             items={[{ name: 'miter' }, { name: 'round'}, { name: 'bevel' }]}
+            onChangeValue={updateLayerLineJoinProperties}
+            title="Line Cap"
           />
 
-          <div>
-            <p>tension</p>
-            <input
-              name="tension"
-              type="range"
-              min={0}
-              max={100}
-              defaultValue="0"
-              onChange={(e) => updateLayer(index, { lineProperties: {
-                ...layer.lineProperties,
-                tension: parseInt(e.target.value, 10) / 100
-              }})}
-            />
-          </div>
+          <SelectorTension
+            index={index}
+            lineProperties={layer.lineProperties}
+            updateLayer={updateLayer}
+          />
         </S.ControlsLayerProperties>
 
         <S.ControlsLayerProperties>
@@ -164,17 +156,14 @@ const Item = ({
           />
 
           <SelectorSize
-            fill={layer.pointsProperties.fill}
             onChangeValue={updateLayerSizePointsProperties}
             value={layer.pointsProperties.radius}
-            variant="block"
-          />
+            />
 
           <SelectorSize
-            fill={layer.pointsProperties.fill}
             onChangeValue={updateLayerStrokeWidthPointsProperties}
+            text="Border Size"
             value={layer.pointsProperties.strokeWidth}
-            variant="border"
           />
         </S.ControlsLayerProperties>
       </S.ControlsLayersItemContainer>

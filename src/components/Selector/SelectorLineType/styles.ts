@@ -8,9 +8,8 @@ const inOption = keyframes`
 export const SelectorLineTypeDiv = styled.div`
   display: flex;
   gap: 8px;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   justify-content: center;
-  width: 100%;
 `
 
 export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
@@ -18,7 +17,7 @@ export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
   align-items: center;
   display: none;
   justify-content: center;
-  width: 40px;
+  width: 30px;
 
   ${({ active }) =>
     active ? `display: flex;` : ''}
@@ -30,7 +29,7 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
   height: 30px;
   position: relative;
   top: 5px;
-  width: 40px;
+  width: 100%;
 
   span,
   &:before,
@@ -38,10 +37,10 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
     background-color: #333;
     border: 1px solid #333;
     content: '';
-    height: 20px;
+    height: 12px;
     position: absolute;
     top: 0;
-    width: 6px;
+    width: 2px;
   }
 
   span {
@@ -71,12 +70,12 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
 
   &:before {
     left: 50%;
-    transform: translate(-12px, 0) rotate(44deg);
+    transform: translate(-6px, 0px) rotate(44deg);
   }
 
   &:after {
     left: 50%;
-    transform: translate(4px, 0) rotate(-44deg);
+    transform: translate(2px, 0px) rotate(-44deg);
   }
 
   ${({ type }) => {
@@ -103,7 +102,7 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
           span {
             border-radius: 100%;
             left: 50%;
-            height: 6px;
+            height: 4px;
             top: -1px;
             transform: translate(-50%, 0px);
             width: 7px;
@@ -183,3 +182,21 @@ export const SelectorLineTypeIconCap = styled.div<{ type: string }>`
     }
   }}
 `
+
+export const SelectorLineContainer = styled.div`
+  align-items: flex-start;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px;
+  justify-content: flex-start;
+`
+
+export const SelectorLineText = styled.p`
+  display: flex;
+  font-family: "Roboto Mono", monospace;
+  font-size: 10px;
+  margin: 0;
+  position: relative;
+  width: 100%;
+`
+

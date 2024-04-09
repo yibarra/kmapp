@@ -5,5 +5,6 @@ export interface SelectorLineTypeProps<T = HTMLDivElement>
   defaultValue?: number
   items: Record<string, string>[]
   onChangeValue(val: string): void
+  title: string
   variant?: string
 }
