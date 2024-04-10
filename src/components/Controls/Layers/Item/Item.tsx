@@ -88,12 +88,6 @@ const Item = ({
           onChange={(e) => updateLayer(index, { name: e.currentTarget.value })}
         />
 
-        <button>
-          <span className="material-symbols-rounded" data-any="_off">
-            visibility
-          </span>
-        </button>
-
         <button
           onClick={() => deleteLayer(index)}
         >

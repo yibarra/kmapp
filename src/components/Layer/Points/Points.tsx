@@ -76,7 +76,7 @@ const Points = ({
   
   // render
   return (
-    <Shape listening onClick={onClickPoint} sceneFunc={onDraw} />
+    <Shape {...pointsProperties} listening onClick={onClickPoint} sceneFunc={onDraw} />
   )
 }
 

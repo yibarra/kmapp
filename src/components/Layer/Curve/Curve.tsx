@@ -5,6 +5,7 @@ import type { Shape } from 'konva/lib/Shape'
 
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import type { CurveProps } from './interfaces'
+import type { PointTypePosition } from '../Point/interfaces'
 
 // curve
 const Curve = ({
@@ -16,9 +17,39 @@ const Curve = ({
   points,
   pointXY,
 }: CurveProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const elementLayerRef = useRef<any>(null)
+  const elementLayerRef = useRef(null)
   const { isDragging, isAnchor } = useContext(UIContext)
+
+  // create point
+  const createPoint = (context: Context, [x, y]: number[], [init, end]: number[]): void => (
+    context.quadraticCurveTo(
+      x,
+      y,
+      init,
+      end,
+    )
+  )
+
+  // set point
+  const setPoint = (context: Context, { pointEnd, xy }: { pointEnd: PointTypePosition, xy: number[]}, k: number) => {
+    if (active) {
+      if (isDragging && !isAnchor) {
+        if (pointEnd.position === currentPoint) {
+          createPoint(context, xy, [pointXY.x, pointXY.y])
+        } else {
+          createPoint(context, xy, [pointEnd.x, pointEnd.y])
+        }
+      } else if (isAnchor) {
+        const pos = anchorXY.index === k ? [anchorXY.x, anchorXY.y] : xy
+
+        createPoint(context, pos, [pointEnd.x, pointEnd.y])
+      } else {
+        createPoint(context, xy, [pointEnd.x, pointEnd.y])
+      }
+    } else {
+      createPoint(context, xy, [pointEnd.x, pointEnd.y])
+    }
+  }
 
   // draw line
   const drawLine = (context: Context, shape: Shape) => {
@@ -33,7 +64,6 @@ const Curve = ({
 
       if (pointInit && pointEnd) {
         const pointCurveInit = [pointInit.x, pointInit.y]
-        const pointCurveEnd = [pointEnd.x, pointEnd.y]
         const [xC, yC] = curve.curve
 
         if (pointCurveInit) {
@@ -43,63 +73,7 @@ const Curve = ({
             context.moveTo(pointCurveInit[0], pointCurveInit[1])
           }
 
-          if (active) {
-            if (isDragging && !isAnchor) {
-              if (pointInit.position === currentPoint) {
-                context.quadraticCurveTo(
-                  xC,
-                  yC,
-                  pointCurveEnd[0],
-                  pointCurveEnd[1],
-                )
-                
-              } else if (pointEnd.position === currentPoint) {
-                context.quadraticCurveTo(
-                  xC,
-                  yC,
-                  pointXY.x,
-                  pointXY.y,
-                )
-              } else {
-                context.quadraticCurveTo(
-                  xC,
-                  yC,
-                  pointCurveEnd[0],
-                  pointCurveEnd[1],
-                )
-              }
-            } else if (isAnchor) {
-              if (anchorXY.index === k) {
-                context.quadraticCurveTo(
-                  anchorXY.x,
-                  anchorXY.y,
-                  pointCurveEnd[0],
-                  pointCurveEnd[1],
-                )
-              } else {
-                context.quadraticCurveTo(
-                  xC,
-                  yC,
-                  pointCurveEnd[0],
-                  pointCurveEnd[1],
-                )
-              }
-            } else {
-              context.quadraticCurveTo(
-                xC,
-                yC,
-                pointCurveEnd[0],
-                pointCurveEnd[1],
-              )
-            }
-          } else {
-            context.quadraticCurveTo(
-              xC,
-              yC,
-              pointCurveEnd[0],
-              pointCurveEnd[1],
-            )
-          }
+          setPoint(context, { pointEnd, xy: [xC, yC] }, k)
         }
       }
     }
