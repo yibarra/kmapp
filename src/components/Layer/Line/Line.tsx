@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useRef } from 'react'
 import { Shape as LineKonva } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
@@ -17,8 +17,7 @@ const Line = ({
   points,
   pointXY,
 }: LineProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const elementLayerRef = useRef<any>(null)
+  const elementLayerRef = useRef(null)
   const { isDragging } = useContext(UIContext)
 
   // find point curve
@@ -49,6 +48,39 @@ const Line = ({
     }
   }
 
+  // set point
+  const setPoint = (item: PointTypePosition, result: number[][], position: number[]) => {
+    if (active && isDragging && currentPoint === item.position) {
+      return result.push([pointXY.x, pointXY.y, 0])
+    }
+    
+    return result.push([...position, 0])
+  }
+
+  // convert point
+  const convertPoint = (item: PointTypePosition, index: number, result: number[][]) => {
+    const point = [item.x, item.y]
+  
+    if (point) {
+      const { element } = findPointCurve(index)
+      const [x, y] = point
+
+      if (element) {
+        if (element.pointInit === index && element.pointInit < element.pointEnd) {
+          setPoint(item, result, [x, y])
+        } else if (active && isDragging && currentPoint === item.position) {
+          return result.push([pointXY.x, pointXY.y, 1])
+        }
+
+        return result.push([x, y, 1])
+      }
+      
+      if (!element) {
+        setPoint(item, result, [x, y])
+      }
+    }
+  }
+
   // convert points
   const convertPoints = (items: PointTypePosition[]): number[][] => {
     const result: number[][] = []
@@ -57,34 +89,7 @@ const Line = ({
       const item = items[index]
 
       if (item) {
-        const point = [item.x, item.y]
-  
-        if (point) {
-          const { element } = findPointCurve(index)
-          const [x, y] = point
-
-          if (element) {
-            if (element.pointInit === index && element.pointInit < element.pointEnd) {
-              if (active && isDragging && currentPoint === item.position) {
-                result.push([pointXY.x, pointXY.y, 0])
-              } else {
-                result.push([x, y, 0])
-              }
-            } else if (active && isDragging && currentPoint === item.position) {
-              result.push([pointXY.x, pointXY.y, 1])
-            } else {
-              result.push([x, y, 1])
-            }
-          }
-          
-          if (!element) {
-            if (active && isDragging && currentPoint === item.position) {
-              result.push([pointXY.x, pointXY.y, 0])
-            } else {
-              result.push([x, y, 0])
-            }
-          }
-        }
+        convertPoint(item, index, result)
       }
     }
 
@@ -127,13 +132,6 @@ const Line = ({
 
     context.fillStrokeShape(shape)
   }
-
-  // use effect
-  useEffect(() => {
-    if (elementLayerRef.current && typeof elementLayerRef.current.to !== 'undefined') {
-      elementLayerRef.current.to({ ...lineProperties })
-    }
-  }, [active, isDragging, lineProperties])
 
   // render
   return (

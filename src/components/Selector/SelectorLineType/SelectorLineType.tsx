@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 import type { SelectorLineTypeProps } from './interfaces'
 import * as S from './styles'
+import ComboBox from '../../ComboBox'
 
 // selector line type
 const SelectorLineType = ({
@@ -18,25 +19,26 @@ const SelectorLineType = ({
     <S.SelectorLineTypeDiv>
       <S.SelectorLineText>{title}</S.SelectorLineText>
 
-      <S.SelectorLineContainer>
-        {items.map(({ name = '' }, index: number) =>
-          <S.SelectorLineTypeItemDiv
-            active={String(current === index)}
-            onClick={() => {
-              onChangeValue(name)
-              setCurrent(index)
-            }}
-            key={index}
-          >
+      <ComboBox
+        callback={(value: any) => {
+          onChangeValue(items[current].name)
+          setCurrent(value)
+        }}
+        max={items.length - 1}
+        min={0}
+        value={current}
+      >
+        {items.map(({ name }: any, index: number) =>
+          <S.SelectorLineTypeItemDiv active={String(current === index)} key={index}>
             {(variant === 'join')
-              ? <S.SelectorLineTypeIconJoin type={name}>
+              ? <S.SelectorLineTypeIconJoin typeLine={name}>
                   <span></span>
                 </S.SelectorLineTypeIconJoin>
-              : <S.SelectorLineTypeIconCap type={name} />
+              : <S.SelectorLineTypeIconCap typeLine={name} />
             }
           </S.SelectorLineTypeItemDiv>
         )}
-      </S.SelectorLineContainer>
+      </ComboBox>
     </S.SelectorLineTypeDiv>
   )
 }

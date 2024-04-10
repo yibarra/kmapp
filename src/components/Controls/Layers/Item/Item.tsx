@@ -22,6 +22,13 @@ const Item = ({
     }})
   }
 
+  const updateLineDashPropertiesPoints = (properties: any, dash: number[]) => {
+    updateLayer(index, { pointsProperties: {
+      ...properties,
+      dash,
+    }})
+  }
+
   const updateLayerLineJoinProperties = (lineJoin: string) => {
     updateLayer(index, { lineProperties: {
       ...layer.lineProperties,
@@ -32,6 +39,20 @@ const Item = ({
   const updateLayerLineCapProperties = (lineCap: string) => {
     updateLayer(index, { lineProperties: {
       ...layer.lineProperties,
+      lineCap,
+    }})
+  }
+
+  const updateLayerLineJoinPropertiesPoints = (lineJoin: string) => {
+    updateLayer(index, { pointsProperties: {
+      ...layer.pointsProperties,
+      lineJoin,
+    }})
+  }
+
+  const updateLayerLineCapPropertiesPoints = (lineCap: string) => {
+    updateLayer(index, { pointsProperties: {
+      ...layer.pointsProperties,
       lineCap,
     }})
   }
@@ -145,18 +166,30 @@ const Item = ({
           />
 
           <SelectorColor
+            color={layer.pointsProperties.active}
+            radius
+            setColor={(active: string) => updateLayer(index, { pointsProperties: {
+              ...layer.pointsProperties,
+              active,
+            }})}
+            text="Active"
+            variation="line"
+          />
+
+          <SelectorColor
             color={layer.pointsProperties.stroke}
             radius
             setColor={(stroke: string) => updateLayer(index, { pointsProperties: {
               ...layer.pointsProperties,
               stroke,
             }})}
-            text="Border Color"
+            text="Border"
             variation="border"
           />
 
           <SelectorSize
             onChangeValue={updateLayerSizePointsProperties}
+            text="Radius"
             value={layer.pointsProperties.radius}
             />
 
@@ -164,6 +197,24 @@ const Item = ({
             onChangeValue={updateLayerStrokeWidthPointsProperties}
             text="Border Size"
             value={layer.pointsProperties.strokeWidth}
+          />
+
+          <SelectorDash
+            properties={layer.pointsProperties}
+            updateDashProperty={updateLineDashPropertiesPoints}
+          />
+
+          <SelectorLineType
+            onChangeValue={updateLayerLineCapPropertiesPoints}
+            items={[{ name: 'round' }, { name: 'butt' }, { name: 'square' }]}
+            title="Line Join"
+            variant="cap"
+          />
+
+          <SelectorLineType
+            items={[{ name: 'miter' }, { name: 'round'}, { name: 'bevel' }]}
+            onChangeValue={updateLayerLineJoinPropertiesPoints}
+            title="Line Cap"
           />
         </S.ControlsLayerProperties>
       </S.ControlsLayersItemContainer>

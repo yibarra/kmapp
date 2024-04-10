@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useRef } from 'react'
 import { Shape as ShapeK } from 'react-konva'
 import type { Context } from 'konva/lib/Context'
 import type { Shape } from 'konva/lib/Shape'
@@ -18,7 +18,6 @@ const Curve = ({
 }: CurveProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const elementLayerRef = useRef<any>(null)
-
   const { isDragging, isAnchor } = useContext(UIContext)
 
   // draw line
@@ -107,13 +106,6 @@ const Curve = ({
 
     context.fillStrokeShape(shape)
   }
-
-  // use effect
-  useEffect(() => {
-    if (elementLayerRef.current && typeof elementLayerRef.current.to !== 'undefined') {
-      elementLayerRef.current.to({ ...lineProperties })
-    }
-  }, [active, isDragging, lineProperties])
 
   // render
   return (

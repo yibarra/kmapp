@@ -1,15 +1,15 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import * as S from './styles'
 
 // combo box
-const ComboBox: React.FC<any> = ({
+const ComboBox = ({
   callback,
   children,
   max,
   min,
   value,
-}) => {
+}: any) => {
   // on change value
   const onChangeValue = useCallback((typeOp?: string) => {
     let val
@@ -20,7 +20,9 @@ const ComboBox: React.FC<any> = ({
       val = max < value + 1 ? max : value + 1
     }
 
-    callback(val)
+    if (typeof callback === 'function') {
+      callback(val)
+    }
   }, [callback, max, min, value])
 
   // render

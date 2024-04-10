@@ -17,19 +17,18 @@ export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
   align-items: center;
   display: none;
   justify-content: center;
-  width: 30px;
+  width: 100%;
 
-  ${({ active }) =>
-    active ? `display: flex;` : ''}
+  ${({ active }) => active === 'true' ? `display: flex;` : ''}
 `
 
-export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
+export const SelectorLineTypeIconJoin = styled.div<{ typeLine: string }>`
   background-color: transparent;
   display: flex;
   height: 30px;
   position: relative;
   top: 5px;
-  width: 100%;
+  width: 40px;
 
   span,
   &:before,
@@ -37,10 +36,10 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
     background-color: #333;
     border: 1px solid #333;
     content: '';
-    height: 12px;
+    height: 20px;
     position: absolute;
     top: 0;
-    width: 2px;
+    width: 6px;
   }
 
   span {
@@ -70,16 +69,16 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
 
   &:before {
     left: 50%;
-    transform: translate(-6px, 0px) rotate(44deg);
+    transform: translate(-12px, 0) rotate(44deg);
   }
 
   &:after {
     left: 50%;
-    transform: translate(2px, 0px) rotate(-44deg);
+    transform: translate(4px, 0) rotate(-44deg);
   }
 
-  ${({ type }) => {
-    switch (type) {
+  ${({ typeLine }) => {
+    switch (typeLine) {
       case 'miter':
         return `
           span {
@@ -102,7 +101,7 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
           span {
             border-radius: 100%;
             left: 50%;
-            height: 4px;
+            height: 6px;
             top: -1px;
             transform: translate(-50%, 0px);
             width: 7px;
@@ -132,7 +131,7 @@ export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
   }}
 `
 
-export const SelectorLineTypeIconCap = styled.div<{ type: string }>`
+export const SelectorLineTypeIconCap = styled.div<{ typeLine: string }>`
   background-color: #FFF;
   border: 5px solid #333;
   height: 0;
@@ -162,22 +161,22 @@ export const SelectorLineTypeIconCap = styled.div<{ type: string }>`
     right: -2px;
   }
 
-  ${({ type }) => {
-    switch (type) {
+  ${({ typeLine }) => {
+    switch (typeLine) {
       case 'round':
         return `border-radius: 20px;`
       case 'butt':
         return `
           border-left-width: 0;
           border-right-width: 0;
-          margin: 10px 0;
+          margin: 10px;
         `
       case 'square':
         default:
         return `
           border-left-width: 7px;
           border-right-width: 7px;
-          margin: 10px 0;
+          margin: 10px 5px;
           `
     }
   }}
