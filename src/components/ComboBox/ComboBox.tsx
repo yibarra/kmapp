@@ -1,5 +1,4 @@
-import { useCallback } from 'react'
-
+import { useRef } from 'react'
 import * as S from './styles'
 
 // combo box
@@ -10,33 +9,50 @@ const ComboBox = ({
   min,
   value,
 }: any) => {
-  // on change value
-  const onChangeValue = useCallback((typeOp?: string) => {
-    let val
-    
-    if (typeOp === 'minus') {
-      val = min > value - 1 ? min : value - 1
-    } else {
-      val = max < value + 1 ? max : value + 1
-    }
+  const inputRef = useRef<HTMLInputElement>(null)
 
-    if (typeof callback === 'function') {
-      callback(val)
+  // on change value
+  const onChangeValue = (typeOp?: string) => {
+    if (inputRef.current) {
+      if (typeOp === 'minus') {
+        inputRef.current.stepDown()
+      } else {
+        inputRef.current.stepUp()
+      }
+
+      const inputEvent = new Event('input', { bubbles: true })
+      inputRef.current.dispatchEvent(inputEvent)
     }
-  }, [callback, max, min, value])
+  }
 
   // render
   return (
     <S.ComboBoxDiv>
-      <S.ComboBoxButton onClick={() => onChangeValue()}>
+      <S.ComboBoxButton onClick={() => onChangeValue('minus')}>
         <i className="material-symbols-rounded">expand_less</i>
       </S.ComboBoxButton>
 
-      {children}
+      <S.ComboBoxContainer>
+        {children}
+      </S.ComboBoxContainer>
 
-      <S.ComboBoxButton onClick={() => onChangeValue('minus')}>
+      <S.ComboBoxButton onClick={() => onChangeValue('')}>
         <i className="material-symbols-rounded">expand_more</i>
       </S.ComboBoxButton>
+
+      <S.ComboInput
+        type="number"
+        ref={inputRef}
+        onInput={(event) => {
+          if (typeof callback === 'function') {
+            callback(Number(event.currentTarget.value))
+          }
+        }}
+        step={1}
+        min={min}
+        max={max}
+        value={value}
+      />
     </S.ComboBoxDiv>
   )
 }

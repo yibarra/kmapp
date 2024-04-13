@@ -8,6 +8,11 @@ export const ComboBoxDiv = styled.div`
   vertical-align: top;
 `
 
+export const ComboBoxContainer = styled.div`
+  display: flex;
+  width: 100%;
+`
+
 export const ComboBoxButton = styled.button`
   background-color: transparent;
   border: none;
@@ -24,4 +29,8 @@ export const ComboBoxButton = styled.button`
     top: 50%;
     transform: translate(-50%, -50%);
   }
+`
+
+export const ComboInput = styled.input`
+  visibility: hidden;
 `

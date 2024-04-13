@@ -6,9 +6,9 @@ import type { Shape as ShapeType } from 'konva/lib/Shape'
 
 import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
+import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
 import ToolTip from './ToolTip'
 import type { PointProps } from './interfaces'
-import { ViewportContext } from '../../../providers/ViewportProvider/ViewportProvider'
 
 // point
 const Point = ({
@@ -39,7 +39,9 @@ const Point = ({
   const onDragMovePoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
-    element.current.position({ x: event.evt.clientX, y: event.evt.clientY })
+    if (element.current) {
+      element.current?.position({ x: event.evt.clientX, y: event.evt.clientY })
+    }
     setPointXY({ x: event.evt.clientX, y: event.evt.clientY })
   }
 

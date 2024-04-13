@@ -22,7 +22,7 @@ export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
   ${({ active }) => active === 'true' ? `display: flex;` : ''}
 `
 
-export const SelectorLineTypeIconJoin = styled.div<{ typeLine: string }>`
+export const SelectorLineTypeIconJoin = styled.div<{ type: string }>`
   background-color: transparent;
   display: flex;
   height: 30px;
@@ -77,8 +77,8 @@ export const SelectorLineTypeIconJoin = styled.div<{ typeLine: string }>`
     transform: translate(4px, 0) rotate(-44deg);
   }
 
-  ${({ typeLine }) => {
-    switch (typeLine) {
+  ${({ type }) => {
+    switch (type) {
       case 'miter':
         return `
           span {
@@ -131,7 +131,7 @@ export const SelectorLineTypeIconJoin = styled.div<{ typeLine: string }>`
   }}
 `
 
-export const SelectorLineTypeIconCap = styled.div<{ typeLine: string }>`
+export const SelectorLineTypeIconCap = styled.div<{ type: string }>`
   background-color: #FFF;
   border: 5px solid #333;
   height: 0;
@@ -161,8 +161,8 @@ export const SelectorLineTypeIconCap = styled.div<{ typeLine: string }>`
     right: -2px;
   }
 
-  ${({ typeLine }) => {
-    switch (typeLine) {
+  ${({ type }) => {
+    switch (type) {
       case 'round':
         return `border-radius: 20px;`
       case 'butt':

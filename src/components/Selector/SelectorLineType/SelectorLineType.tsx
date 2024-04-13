@@ -12,7 +12,7 @@ const SelectorLineType = ({
   title,
   variant = 'join'
 }: SelectorLineTypeProps) => {
-  const [current, setCurrent] = useState(defaultValue)
+  const [current, setCurrent] = useState<number>(defaultValue)
 
   // render
   return (
@@ -20,8 +20,8 @@ const SelectorLineType = ({
       <S.SelectorLineText>{title}</S.SelectorLineText>
 
       <ComboBox
-        callback={(value: any) => {
-          onChangeValue(items[current].name)
+        callback={(value: number) => {
+          onChangeValue(items[value].name)
           setCurrent(value)
         }}
         max={items.length - 1}
@@ -31,10 +31,10 @@ const SelectorLineType = ({
         {items.map(({ name }: any, index: number) =>
           <S.SelectorLineTypeItemDiv active={String(current === index)} key={index}>
             {(variant === 'join')
-              ? <S.SelectorLineTypeIconJoin typeLine={name}>
+              ? <S.SelectorLineTypeIconJoin type={name}>
                   <span></span>
                 </S.SelectorLineTypeIconJoin>
-              : <S.SelectorLineTypeIconCap typeLine={name} />
+              : <S.SelectorLineTypeIconCap type={name} />
             }
           </S.SelectorLineTypeItemDiv>
         )}

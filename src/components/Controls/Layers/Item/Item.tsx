@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import SelectorColor from '../../../Selector/SelectorColor'
 import SelectorDash from '../../../Selector/SelectorDash'
 import SelectorLineType from '../../../Selector/SelectorLineType'
@@ -36,12 +37,14 @@ const Item = ({
     }})
   }
 
-  const updateLayerLineCapProperties = (lineCap: string) => {
+  const updateLayerLineCapProperties = useCallback((lineCap: string) => {
+    console.info(lineCap)
+    
     updateLayer(index, { lineProperties: {
       ...layer.lineProperties,
       lineCap,
     }})
-  }
+  }, [layer.lineProperties, index, updateLayer])
 
   const updateLayerLineJoinPropertiesPoints = (lineJoin: string) => {
     updateLayer(index, { pointsProperties: {
@@ -50,12 +53,14 @@ const Item = ({
     }})
   }
 
-  const updateLayerLineCapPropertiesPoints = (lineCap: string) => {
+  const updateLayerLineCapPropertiesPoints = useCallback((lineCap: string) => {
+    console.info(lineCap)
+
     updateLayer(index, { pointsProperties: {
       ...layer.pointsProperties,
       lineCap,
     }})
-  }
+  }, [layer.pointsProperties, index, updateLayer])
 
   const updateLayerSizeLineProperties = (strokeWidth: number) => {
     updateLayer(index, { lineProperties: {
