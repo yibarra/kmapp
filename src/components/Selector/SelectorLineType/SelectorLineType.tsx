@@ -28,7 +28,7 @@ const SelectorLineType = ({
         min={0}
         value={current}
       >
-        {items.map(({ name }: any, index: number) =>
+        {Array.isArray(items) && items.map(({ name }, index: number) =>
           <S.SelectorLineTypeItemDiv active={String(current === index)} key={index}>
             {(variant === 'join')
               ? <S.SelectorLineTypeIconJoin type={name}>

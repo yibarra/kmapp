@@ -11,6 +11,7 @@ export const LayersWrapper = styled.div`
   justify-content: flex-start;
   left: initial;
   right: 0;
+  overflow: hidden;
   position: absolute;
   top: 0;
   width: 320px;

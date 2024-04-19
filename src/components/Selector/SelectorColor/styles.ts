@@ -33,6 +33,12 @@ export const SelectorColorPopOver = styled.div<{ radius?: string }>`
   bottom: calc(100% + 10px);
   border: 3px solid #333;
   border-radius: 6px;
+  right: 0;
+  height: fit-content;
+  overflow: hidden;
+  position: absolute;
+  bottom: 100%;
+  width: fit-content;
 
   .react-colorful {
     height: 140px;

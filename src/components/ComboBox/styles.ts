@@ -32,5 +32,8 @@ export const ComboBoxButton = styled.button`
 `
 
 export const ComboInput = styled.input`
+  left: 0;
+  position: absolute;
+  top: 0;
   visibility: hidden;
 `

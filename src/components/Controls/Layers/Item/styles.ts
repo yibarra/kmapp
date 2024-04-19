@@ -1,9 +1,17 @@
 import styled from 'styled-components'
 
+export const ControlsLayerGroup = styled.div`
+  display: grid;
+  flex-flow: row nowrap;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+  width: 100%;
+`
+
 export const ControlsLayerPropertiesTitle = styled.p`
   font-family: "Roboto Mono", monospace;
   font-size: 12px;
-  margin: 8px 0;
+  margin: 0;
   width: 100%;
 `
 
@@ -11,7 +19,7 @@ export const ControlsLayerProperties = styled.div`
   align-items: flex-start;
   display: flex;
   flex-flow: row wrap;
-  gap: 32px;
+  gap: 24px;
   padding: 9px 0 ;
   width: 100%;
 
@@ -47,6 +55,31 @@ export const ControlsLayersItemContainer = styled.div<{ toggle: string }>`
 
 export const ControlsLayersItemHeaderDiv = styled.div`
   display: flex;
+  position: relative;
   width: 100%;
+
+  input {
+    border: none;
+    cursor: pointer;
+    font-family: "Roboto Mono", monospace;
+    font-size: 12px;
+    outline: none;
+    padding: 16px 20px;
+    width: calc(100% - 40px);
+  }
+
+  button {
+    width: 40px;
+  }
+
+  &:before {
+    background: #222;
+    content: '';
+    height: 2px;
+    left: 0;
+    position: absolute;
+    top: calc(100% - 1px);
+    width: 100%;
+  }
 `
 

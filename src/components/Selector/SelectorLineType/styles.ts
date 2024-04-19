@@ -10,6 +10,10 @@ export const SelectorLineTypeDiv = styled.div`
   gap: 8px;
   flex-flow: column nowrap;
   justify-content: center;
+
+  > div {
+    width: 40px;
+  }
 `
 
 export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
@@ -17,7 +21,7 @@ export const SelectorLineTypeItemDiv = styled.div<{ active: string }>`
   align-items: center;
   display: none;
   justify-content: center;
-  width: 100%;
+  width: 40px;
 
   ${({ active }) => active === 'true' ? `display: flex;` : ''}
 `
