@@ -99,7 +99,10 @@ export const dataDefault = {
         pointInit: 6,
         pointEnd: 7,
         curve: [500, 400]
-      }]
+      }],
+      "drag": {
+        "offset": [0, 0],
+      }
     },
     {
       "id": 2,
@@ -161,7 +164,10 @@ export const dataDefault = {
           "position": 5
         }
       ],
-      "curves": []
+      "curves": [],
+      "drag": {
+        "offset": [0, 0],
+      }
     },
     {
       "id": "layer-1",
@@ -213,7 +219,10 @@ export const dataDefault = {
         pointInit: 1,
         pointEnd: 2,
         curve: [10, 10]
-      }]
+      }],
+      "drag": {
+        "offset": [0, 0],
+      }
     }
   ]
 }

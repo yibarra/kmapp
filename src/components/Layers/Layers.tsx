@@ -6,6 +6,7 @@ import { LayersContext } from '../../providers/LayersProvider'
 import ViewportProvider from '../../providers/ViewportProvider/ViewportProvider'
 import UseWindowSize from '../../hooks/useWindowSize'
 
+// layers
 const Layers = () => {
   const size = UseWindowSize()
   const { current, layers } = useContext(LayersContext)
@@ -14,10 +15,11 @@ const Layers = () => {
     <Group>
       {Array.isArray(layers) && layers.map((layer, index) => (
         <ViewportProvider
-          drag={layer.drag}
+          {...layer.drag}
+          active={current === index}
           height={size.height}
-          width={size.width}
           key={index}
+          width={size.width}
         >
           <Layer
             {...layer}

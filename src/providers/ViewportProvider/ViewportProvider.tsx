@@ -1,65 +1,31 @@
-import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, useCallback, useMemo } from 'react'
 
 import { scale, subtract } from '../../helpers/graphs'
-import { UIContext } from '../UIProvider/UIProvider'
 import type { ViewportContextProps, ViewportProviderProps } from './interfaces'
 
 // Viewport Context
 const ViewportContext = createContext({} as ViewportContextProps)
 
 // Viewport Provider
-const ViewportProvider = ({ children, drag, height, width }: ViewportProviderProps) => {
-  const { isDragging, setIsDragging } = useContext(UIContext)
-    
+const ViewportProvider = ({ children, height, offset = [0, 0], width }: ViewportProviderProps) => {    
   // properties
-  const [properties, setProperties] = useState({
+  const properties = useMemo(() => ({
     center: [width / 2, height / 2],
-    drag,
-    offset: scale([width / 2, height / 2], -1),
+    drag: {
+      offset: scale(offset, -1),
+    },
     zoom: 1,
-  })
+  }), [offset, height, width])
 
   // get mouse
   const getMouse = useCallback((offsetX: number, offsetY: number, subtractDragOffset = false) => {
     const p = [
-      offsetX - properties.offset[0],
-      offsetY - properties.offset[1]
+      offsetX - properties.drag.offset[0],
+      offsetY - properties.drag.offset[1]
     ]
 
    return subtractDragOffset ? subtract(p, properties.drag.offset) : p
   }, [properties])
-
-  // on drag
-  const onDrag = useCallback(() =>  setIsDragging(true), [setIsDragging])
-
-  // on move
-  const onMove = useCallback((offset: number[], event: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent) => {
-    if (isDragging && event.shiftKey) {
-      console.info('auer', offset)
-      setProperties((props) => ({
-        ...props,
-        drag: {
-          ...props.drag,
-        },
-        offset
-      }))
-    }
-  }, [isDragging, setProperties])
-
-  // on move end
-  const onMoveEnd = useCallback((offset: number[]) => {
-    if (isDragging) {
-      setIsDragging(false)
-
-      setProperties((props) => ({
-        ...props,
-        drag: {
-          ...props.drag,
-        },
-        offset
-      }))
-    }
-  }, [isDragging, setIsDragging, setProperties])
 
   // render
   return (
@@ -67,15 +33,9 @@ const ViewportProvider = ({ children, drag, height, width }: ViewportProviderPro
       value={useMemo(() => ({
         getMouse,
         properties,
-        onDrag,
-        onMove,
-        onMoveEnd,
       }), [
         getMouse,
         properties,
-        onDrag,
-        onMove,
-        onMoveEnd,
       ])}
     > 
       {children}

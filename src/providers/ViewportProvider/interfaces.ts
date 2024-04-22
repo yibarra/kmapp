@@ -5,19 +5,17 @@ type propertiesType = {
   drag: {
     offset: number[]
   },
-  offset: number[]
+  zoom: number
 }
 
 export interface ViewportContextProps {
   getMouse(offsetX: number, offsetY: number, subtractDragOffset?: boolean): number[]
   properties: propertiesType
-  onDrag(): void
-  onMove(offset: number[], event: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent): void
-  onMoveEnd(offset: number[]): void
 }
 
 export interface ViewportProviderProps extends PropsWithChildren {
-  drag: propertiesType['drag']
+  active?: boolean
   height: number
+  offset?: propertiesType['drag']['offset']
   width: number
 }

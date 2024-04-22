@@ -1,10 +1,12 @@
-import { useCallback } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import SelectorColor from '../../../Selector/SelectorColor'
 import SelectorDash from '../../../Selector/SelectorDash'
 import SelectorLineType from '../../../Selector/SelectorLineType'
 import SelectorSize from '../../../Selector/SelectorSize'
 import SelectorTension from '../../../Selector/SelectorTension'
+import { UIContext } from '../../../../providers/UIProvider/UIProvider'
 import * as S from './styles'
+import { getWidthHeightByPoints } from '../helpers'
 
 // controls layers item
 const Item = ({
@@ -15,7 +17,12 @@ const Item = ({
   setCurrent,
   updateLayer,
 }: any) => {
+  // is move
+  const { isMove, setIsMove } = useContext(UIContext)
 
+  // move offset
+  const setMoveOffset = () => setIsMove((val) => !val)
+  
   const updateLineDashProperties = (properties: any, dash: number[]) => {
     updateLayer(index, { lineProperties: {
       ...properties,
@@ -83,6 +90,35 @@ const Item = ({
     }})
   }
 
+  // use effect
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      if (active && isMove) {
+        if (event?.shiftKey) {
+          const { height, width } = getWidthHeightByPoints(layer.points)
+          console.info(height, width)
+
+          const posX = event.clientX - (window.innerWidth / 2)
+          const posY = event.clientY - (window.innerHeight / 2)
+          updateLayer(index, { drag: {
+            ...layer.drag,
+            offset: [posX, posY],
+          }})
+        }
+      }
+    }
+
+    if (active && isMove) {
+      window.addEventListener('mousemove', handleMouseMove)
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [active, index, isMove, layer, updateLayer])
+
   // render
   return (
     <S.ControlsLayersItemDiv style={{ overflow: active ? 'initial' : 'hidden' }}>
@@ -93,6 +129,12 @@ const Item = ({
           onClick={() => setCurrent(index)}
           type="text"
         />
+
+        <button onClick={() => setMoveOffset()} style={{ background: isMove && active ? 'lightBlue' : 'white' }}>
+          <span className="material-symbols-rounded">
+            back_hand
+          </span>
+        </button>
 
         <button
           onClick={() => deleteLayer(index)}

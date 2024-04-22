@@ -12,6 +12,7 @@ const UIProvider = ({ children }: PropsWithChildren) => {
   const [curve, setCurve] = useState(false)
   const [isAnchor, setIsAnchor] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [isMove, setIsMove] = useState(false)
   const [enable, setEnable] = useState(false)
   const [remove, setRemove] = useState(false)
 
@@ -23,12 +24,14 @@ const UIProvider = ({ children }: PropsWithChildren) => {
         curve,
         isAnchor,
         isDragging,
+        isMove,
         enable,
         remove,
         setAnimate,
         setCurve,
         setIsAnchor,
         setIsDragging,
+        setIsMove,
         setEnable,
         setRemove,
       }}

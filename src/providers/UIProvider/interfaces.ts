@@ -4,11 +4,13 @@ export interface UIContextProps {
   animate: boolean
   curve: boolean
   enable: boolean
-  isDragging: boolean
   isAnchor: boolean
+  isDragging: boolean
+  isMove?: boolean
   remove: boolean
   setAnimate: Dispatch<SetStateAction<boolean>>
   setIsAnchor: Dispatch<SetStateAction<boolean>>
+  setIsMove: Dispatch<SetStateAction<boolean>>
   setCurve: Dispatch<SetStateAction<boolean>>
   setIsDragging: Dispatch<SetStateAction<boolean>>
   setEnable: Dispatch<SetStateAction<boolean>>

@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import Stage from './Stage'
 
 import Controls from '../../components/Controls/Controls'
+import MenuPoint from '../../components/MenuPoint'
 import { DataContext } from '../../providers/DataProvider'
 import { LayersProvider } from '../../providers/LayersProvider'
 import { MainContext } from '../../providers/MainProvider/MainProvider'
@@ -14,7 +15,7 @@ import * as S from './styles'
 const Main = () => {
   const size = UseWindowSize()
 
-  const { loaded} = useContext(MainContext)
+  const { loaded } = useContext(MainContext)
   const { enable, remove } = useContext(UIContext)
   const { data } = useContext(DataContext)
 
@@ -27,6 +28,7 @@ const Main = () => {
         <LayersProvider data={{ layers: values }} enable={enable} remove={remove}>
           <Stage {...size} />
 
+          <MenuPoint />
           <Controls.Layers />
         </LayersProvider>
       )}

@@ -13,6 +13,7 @@ export type PointTypePosition = {
 }
 
 export interface LayerLineProperties {
+  border?: string
   dash?: number[]
   lineCap: 'butt' | 'round' | 'square'
   lineJoin: 'miter' | 'round' | 'bevel'
@@ -22,16 +23,17 @@ export interface LayerLineProperties {
 }
 
 export interface LayerPointsProperties extends Omit<LayerLineProperties, 'tension'> {
+  active?: string
   fill?: string
   radius: number
 }
 
 export interface LayerProps {
   curves: CurveType[]
-  drag: {
-    offset: number[]
+  drag?: {
+    offset?: number[]
   }
-  id: number
+  id: number | string
   name: string
   currentPoint: number
   lineProperties: LayerLineProperties,
