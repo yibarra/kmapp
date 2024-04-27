@@ -44,9 +44,7 @@ const Item = ({
     }})
   }
 
-  const updateLayerLineCapProperties = useCallback((lineCap: string) => {
-    console.info(lineCap)
-    
+  const updateLayerLineCapProperties = useCallback((lineCap: string) => {    
     updateLayer(index, { lineProperties: {
       ...layer.lineProperties,
       lineCap,
@@ -61,8 +59,6 @@ const Item = ({
   }
 
   const updateLayerLineCapPropertiesPoints = useCallback((lineCap: string) => {
-    console.info(lineCap)
-
     updateLayer(index, { pointsProperties: {
       ...layer.pointsProperties,
       lineCap,
@@ -100,6 +96,7 @@ const Item = ({
 
           const posX = event.clientX - (window.innerWidth / 2)
           const posY = event.clientY - (window.innerHeight / 2)
+          
           updateLayer(index, { drag: {
             ...layer.drag,
             offset: [posX, posY],

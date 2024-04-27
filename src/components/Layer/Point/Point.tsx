@@ -23,7 +23,7 @@ const Point = ({
 }: PointProps) => {
   const { isDragging, setIsDragging } = useContext(UIContext)
   const { sizeBox } = useContext(GridContext)
-  const { getMouse } = useContext(ViewportContext)
+  const { properties } = useContext(ViewportContext)
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const element = useRef<any>(null)
@@ -39,24 +39,28 @@ const Point = ({
   const onDragMovePoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
+    const x = event.evt.clientX
+    const y = event.evt.clientY
+
     if (element.current) {
-      element.current?.position({ x: event.evt.clientX, y: event.evt.clientY })
+      element.current?.position({ x, y })
     }
-    setPointXY({ x: event.evt.clientX, y: event.evt.clientY })
+
+    setPointXY({ x, y })
   }
 
   // on drag end point
   const onDragEndPoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
     
-    const point = getMouse(event.evt.clientX, event.evt.clientY)
+    const x = event.evt.clientX 
+    const y = event.evt.clientY 
 
-    if (active && point && element.current) {
-      const [x, y] = point
-
+    if (active && element.current) {
       element.current.to({ x, y })
+
       setIsDragging(false)
-      setPositionPoint(x, y, currentPoint)
+      setPositionPoint(x + properties.drag.offset[0], y + properties.drag.offset[1], currentPoint)
     }
   }
 

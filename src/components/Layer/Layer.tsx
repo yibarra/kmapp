@@ -11,17 +11,25 @@ import { LayersContext } from '../../providers/LayersProvider'
 import type { LayerProps } from '../../providers/LayersProvider/interfaces'
 import type { PointAnchorPosition } from './Anchor/interfaces'
 import type { PointTypePosition } from './Point/interfaces'
+import { ViewportContext } from '../../providers/ViewportProvider/ViewportProvider'
 
 // layer
 const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
   const { sizeBox } = useContext(GridContext)
   const { current, updateLayer, updateLayerPoint } = useContext(LayersContext)
+  const { properties } = useContext(ViewportContext)
 
-  const { active, curves, currentPoint, drag, points, pointsProperties } = props
-
-  const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>(props.points[currentPoint])
-  const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({ x: 0, y: 0, index: 0 })
+  const [pointXY, setPointXY] = useState<Omit<PointTypePosition, 'position'>>({
+    x: props.points[props.currentPoint].x - properties.drag.offset[0],
+    y: props.points[props.currentPoint].y - properties.drag.offset[1],
+  })
+  const [anchorXY, setAnchorXY] = useState<PointAnchorPosition>({
+    x: properties.drag.offset[0],
+    y: properties.drag.offset[1],
+    index: 0
+  })
   
+  const { active, curves, currentPoint, drag, points, pointsProperties } = props
   const radius = (sizeBox / 2) - 2
 
   // update point
@@ -41,7 +49,10 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
       }, currentPoint
     )
   }
- 
+
+  const curvesPosition = curves.map(({ curve: [x, y], ...curve}) => ({...curve, curve: [x + (drag?.offset ? drag?.offset[0] : 0), y + (drag?.offset ? drag?.offset[1] : 0) ]}))
+  const pointsPosition = points.map(({ x, y, position }) => ({ x: x + (drag?.offset ? drag?.offset[0] : 0), y: y + (drag?.offset ? drag?.offset[1] : 0), position }))
+  
   const point = points[props.currentPoint]
 
   // render
@@ -53,21 +64,21 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         {...props}
         anchorXY={anchorXY}
         pointXY={pointXY}
-        points={points.map(({ x, y, position }) => ({ x: x + (drag?.offset ? drag?.offset[0] : 0), y: y + (drag?.offset ? drag?.offset[1] : 0), position }))}
+        points={pointsPosition}
       />
 
       <Curve
         {...props}
-        curves={curves.map(({ curve: [x, y], ...curve}) => ({...curve, curve: [x + (drag?.offset ? drag?.offset[0] : 0), y + (drag?.offset ? drag?.offset[1] : 0) ]}))}
-        points={points.map(({ x, y, position }) => ({ x: x + (drag?.offset ? drag?.offset[0] : 0), y: y + (drag?.offset ? drag?.offset[1] : 0), position }))}
-        anchorXY={{ x: anchorXY.x + (drag?.offset ? drag?.offset[0] : 0), y: anchorXY.y + (drag?.offset ? drag?.offset[1] : 0), index: anchorXY.index }}
-        pointXY={{ x: pointXY.x + (drag?.offset ? drag?.offset[0] : 0), y: pointXY.y + (drag?.offset ? drag?.offset[1] : 0) }}
+        curves={curvesPosition}
+        points={pointsPosition}
+        anchorXY={anchorXY}
+        pointXY={pointXY}
       />
 
       <Points
         {...props}
-        curves={curves.map(({ curve: [x, y], ...curve}) => ({...curve, curve: [x + (drag?.offset ? drag?.offset[0] : 0), y + (drag?.offset ? drag?.offset[1] : 0) ]}))}
-        points={points.map(({ x, y, position }) => ({ x: x + (drag?.offset ? drag?.offset[0] : 0), y: y + (drag?.offset ? drag?.offset[1] : 0), position }))}
+        curves={curvesPosition}
+        points={pointsPosition}
         radius={radius}
         pointXY={pointXY}
         setAnchorXY={setAnchorXY}
@@ -77,21 +88,21 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
       <Point
         {...props}
-        x={point.x + (drag?.offset ? drag?.offset[0] : 0)}
-        y={point.y + (drag?.offset ? drag?.offset[1] : 0)}
         pointsProperties={{ ...pointsProperties, radius: (sizeBox / 2) - 2 }}
         pointXY={pointXY}
-        setPointXY={setPointXY}
         setPositionPoint={setPositionPoint}
+        setPointXY={setPointXY}
+        x={point.x + (drag?.offset ? drag?.offset[0] : 0)}
+        y={point.y + (drag?.offset ? drag?.offset[1] : 0)}
       />
 
       {active && (
         <Anchor
           {...props}
-          curves={curves.map(({ curve: [x, y], ...curve}) => ({...curve, curve: [x + (drag?.offset ? drag?.offset[0] : 0), y + (drag?.offset ? drag?.offset[1] : 0) ]}))}
           anchorXY={anchorXY}
+          curves={curvesPosition}
           pointXY={pointXY}
-          points={points.map(({ x, y, position }) => ({ x: x + (drag?.offset ? drag?.offset[0] : 0), y: y + (drag?.offset ? drag?.offset[1] : 0), position }))}
+          points={pointsPosition}
           setAnchorXY={setAnchorXY}
         />
       )}

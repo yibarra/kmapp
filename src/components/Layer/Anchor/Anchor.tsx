@@ -7,9 +7,9 @@ import Point from './Point'
 import Tooltip from './Tooltip'
 import { GridContext } from '../../../providers/GridProvider/GridProvider'
 import { UIContext } from '../../../providers/UIProvider/UIProvider'
+import { calculateDashArray, getDistance } from '../../../providers/GridProvider/helpers'
 import type { PointTypePosition } from '../Point/interfaces'
 import type { AnchorProps } from './interfaces'
-import { calculateDashArray, getDistance } from '../../../providers/GridProvider/helpers'
 
 // anchor
 const Anchor = ({ anchorXY, currentPoint, curves, points, pointXY, setAnchorXY }: AnchorProps) => {
