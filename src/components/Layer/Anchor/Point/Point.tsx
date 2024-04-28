@@ -8,8 +8,7 @@ import { ViewportContext } from '../../../../providers/ViewportProvider/Viewport
 import type { PointAnchorProps } from './interfaces'
 
 const Point = ({ curve, index, pointInit, pointEnd, setAnchorXY, size }: PointAnchorProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const pointRef = useRef<any>(null)
+  const pointRef = useRef(null)
 
   const { properties } = useContext(ViewportContext)
   const { setIsAnchor } = useContext(UIContext)
@@ -22,7 +21,6 @@ const Point = ({ curve, index, pointInit, pointEnd, setAnchorXY, size }: PointAn
   const onDragStartPoint = (event: KonvaEventObject<DragEvent>) => {
     event.cancelBubble = true
 
-    console.info('asdfasidf', event)
     setIsAnchor(true)
     setAnchorXY((pos) => ({ ...pos, index }))
   }

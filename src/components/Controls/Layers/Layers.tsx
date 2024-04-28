@@ -2,12 +2,21 @@ import { useContext } from 'react'
 import nextId from 'react-id-generator'
 
 import { LayersContext } from '../../../providers/LayersProvider'
-import * as S from './styles'
+import { UIContext } from '../../../providers/UIProvider/UIProvider'
 import Item from './Item'
+import * as S from './styles'
 
 // layers
 const Layers = () => {
-  const { current, createLayer, layers, setCurrent, updateLayer } = useContext(LayersContext)
+  const {
+    current,
+    createLayer,
+    layers,
+    setCurrent,
+    updateLayer
+  } = useContext(LayersContext)
+
+  const { enable, setEnable } = useContext(UIContext)
 
   // render
   return (
@@ -18,9 +27,11 @@ const Layers = () => {
             active={current === index}
             layer={layer}
             current={current}
+            enable={enable}
             index={index}
             setCurrent={setCurrent}
             updateLayer={updateLayer}
+            setEnable={setEnable}
             key={index}
           />
         ))}

@@ -64,7 +64,7 @@ export const ControlsLayersItemHeaderDiv = styled.div`
     font-family: "Roboto Mono", monospace;
     font-size: 12px;
     outline: none;
-    padding: 16px 20px;
+    padding: 13px 20px;
     width: calc(100% - 40px);
   }
 

@@ -14,7 +14,9 @@ const Item = ({
   deleteLayer,
   index,
   layer,
+  enable = false,
   setCurrent,
+  setEnable,
   updateLayer,
 }: any) => {
   // is move
@@ -96,7 +98,7 @@ const Item = ({
 
           const posX = event.clientX - (window.innerWidth / 2)
           const posY = event.clientY - (window.innerHeight / 2)
-          
+
           updateLayer(index, { drag: {
             ...layer.drag,
             offset: [posX, posY],
@@ -130,6 +132,12 @@ const Item = ({
         <button onClick={() => setMoveOffset()} style={{ background: isMove && active ? 'lightBlue' : 'white' }}>
           <span className="material-symbols-rounded">
             back_hand
+          </span>
+        </button>
+
+        <button onClick={() => setEnable(!enable)} style={{ background: enable && active ? 'red' : 'white' }}>
+          <span className="material-symbols-rounded">
+            edit
           </span>
         </button>
 

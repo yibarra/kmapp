@@ -1,13 +1,15 @@
-import { createContext, useCallback, useState } from 'react'
+import { createContext, useCallback, useContext, useState } from 'react'
 
 import { getCurveExist, getPointByPosition, getPointExistInCurve, orderPoints } from './LayersProviderTools'
 import type { CurveType, LayerProps, LayersContextProps, LayersProvidersProps, PointTypePosition } from './interfaces'
+import { UIContext } from '../UIProvider/UIProvider'
 
 // layers context
 const LayersContext = createContext({} as LayersContextProps)
 
 // layers provider
 const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProvidersProps) => {
+  const { setEnable } = useContext(UIContext)
   const [current, setCurrent] = useState<number | null>(null) // index current
   const [layers, setLayers] = useState<LayerProps[]>(dataInit.layers)
 
@@ -27,12 +29,14 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
   // create layer
   const createLayer = useCallback((layer: LayerProps) => {
     setLayers((oldLayers: LayerProps[]) => {
-      return [
-        ...oldLayers,
-        layer
-      ]
-    })
-  }, [setLayers])
+      const newLayer = [...oldLayers, layer]
+
+      setCurrent(newLayer.length - 1)
+      setEnable(true)
+
+      return newLayer
+    }), [setLayers]
+  }, [setEnable])
 
   // create curve
   const createLayerCurve = useCallback((pointInit: PointTypePosition, pointEnd: PointTypePosition) => {

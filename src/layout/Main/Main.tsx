@@ -29,7 +29,11 @@ const Main = () => {
           <Stage {...size} />
 
           <MenuPoint />
-          <Controls.Layers />
+
+          <Controls.Root>
+            <Controls.Main />
+            <Controls.Layers />
+          </Controls.Root>
         </LayersProvider>
       )}
     </S.MainSection>
