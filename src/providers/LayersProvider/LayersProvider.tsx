@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useState } from 'react'
 
-import { getCurveExist, getPointByPosition, getPointExistInCurve, orderPoints } from './LayersProviderTools'
+import { getCurveExist, getPointByPosition, getPointExistInCurve, orderPoints, removeAndReorder } from './helpers'
 import type { CurveType, LayerProps, LayersContextProps, LayersProvidersProps, PointTypePosition } from './interfaces'
 import { UIContext } from '../UIProvider/UIProvider'
 
@@ -35,29 +35,44 @@ const LayersProvider = ({ children, data: dataInit, enable, remove }: LayersProv
       setEnable(true)
 
       return newLayer
-    }), [setLayers]
+    })
   }, [setEnable])
 
   // create curve
-  const createLayerCurve = useCallback((pointInit: PointTypePosition, pointEnd: PointTypePosition) => {
-    if (!pointInit || !pointEnd || current === null) {
+  const createLayerCurve = useCallback((
+    pointInit: PointTypePosition,
+    pointEnd: PointTypePosition,
+    pointCurve: PointTypePosition,
+  ) => {
+    if (current === null) {
       return false
     }
 
     const curves: CurveType[] = layers[current].curves ?? []
     const checked = getCurveExist(curves, pointInit.position, pointEnd.position)
 
+    console.info(checked, curves, pointCurve, '-----')
+
     if (!checked) {
-      const curveX = (pointEnd.x + pointInit.x) / 2
-      const curveY = (pointEnd.y + pointInit.y) / 2
+      const layer = layers[current]
+      const points = removeAndReorder(layer.points, pointCurve.position)
+
+      const init = points[pointCurve.position - 1]
+      const end = points[pointCurve.position]
+
+      curves.push({ pointInit: init.position,  pointEnd: end.position, curve: [pointCurve.x, pointCurve.y] })
+
+      const updatedCurves = curves
+        .sort((a, b) => a.pointInit - b.pointInit)
+        .map(curve => {
+          if (curve.pointInit > end.position) {
+            return { ...curve, pointInit: curve.pointInit - 1, pointEnd: curve.pointEnd - 1 }
+          }
+      
+          return curve
+        })
   
-      curves.push({
-        pointInit: pointInit.position,
-        pointEnd: pointEnd.position,
-        curve: [curveX, curveY]
-      })
-  
-      updateLayer(current, { ...layers[current], curves })
+      updateLayer(current, { ...layers[current], curves: updatedCurves, points })
     }
   }, [current, layers, updateLayer])
 

@@ -17,8 +17,8 @@ export const getCurveExist = (curves: CurveType[], pointInit: number, pointEnd: 
   return curves.filter(
     (curve: CurveType) => {
       return (
-        (curve.pointEnd === pointEnd && curve.pointInit === pointInit) ||
-        (curve.pointEnd === pointInit && curve.pointInit === pointEnd)
+        (curve.pointEnd === pointInit && curve.pointInit === pointInit) ||
+        (curve.pointEnd === pointEnd && curve.pointInit === pointEnd)
       )
     }).length > 0
 }
@@ -60,4 +60,16 @@ export const orderPoints = (points: PointTypePosition[], index: number) => {
   }
 
   return pointsOrder
+}
+
+// remove and reorder
+export const removeAndReorder = (items: PointTypePosition[], indexToRemove: number): PointTypePosition[] => {
+  const updatedItems = items.filter((_, index) => index !== indexToRemove)
+  
+  const sortedItems = updatedItems.map((item, index) => ({
+    ...item,
+    position: index
+  }))
+  
+  return sortedItems
 }

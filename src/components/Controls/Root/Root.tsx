@@ -5,7 +5,7 @@ import * as S from './styles'
 
 // root 
 const Root = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   // render
   return (

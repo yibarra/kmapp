@@ -1,25 +1,20 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useMemo, useState } from 'react'
 
 import useLocalStorage from '../../hooks/useLocalStorage'
+import { dataLayers } from '../../components/Layers/data'
 import type { DataProviderProps, DataContextProps } from './interfaces'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type T = any
 
-const DataContext = createContext<DataContextProps<unknown>>({
-  data: null,
-  setData: () => {},
-  loading: true,
-  error: null,
-  saveData: () => {},
-  removeData: () => {},
-})
+const DataContext = createContext({} as DataContextProps<unknown>)
 
-const DataProvider = ({ children, name, data: asData }: DataProviderProps<T>) => {
-  const [data, setData] = useLocalStorage<T | null>(name, asData)
-  const [loading, setLoading] = useState(true)
+// data provider
+const DataProvider = ({ children, name }: DataProviderProps) => {
+  const [data, setData] = useLocalStorage<T | null>(name, dataLayers.layers)
   const [error, setError] = useState<Error | null>(null)
 
+  // save storage
   const saveData = useCallback((value: T | null) => {
     try {
       setData(value)
@@ -29,6 +24,7 @@ const DataProvider = ({ children, name, data: asData }: DataProviderProps<T>) =>
     }
   }, [setData, setError])
 
+  // remove storage
   const removeData = useCallback((key: string) => {
     try {
       window.localStorage.removeItem(key)
@@ -40,36 +36,20 @@ const DataProvider = ({ children, name, data: asData }: DataProviderProps<T>) =>
     }
   }, [setData, setError])
 
-  useEffect(() => {
-    if (data !== null) {
-      setLoading(false)
-    }
-  }, [data])
-
-  useEffect(() => {
-    const storedData = window.localStorage.getItem(name)
-
-    if (storedData) {
-      setData(JSON.parse(storedData))
-    } else {
-      setLoading(false)
-    }
-  }, [name, setData])
-
+  // render
   return (
     <DataContext.Provider
       value={
         useMemo(() => ({
           data,
           setData,
-          loading,
+          loading: false,
           error,
           saveData,
           removeData
         }), [
           data,
           setData,
-          loading,
           error,
           saveData,
           removeData

@@ -4,7 +4,6 @@ import WebFontLoader from 'webfontloader'
 import UseWindowSize from '../../hooks/useWindowSize'
 import UIProvider from '../UIProvider/UIProvider'
 import { DataProvider } from '../DataProvider'
-import { dataLayers } from '../../components/Layers/data'
 import type { MainContextProps, MainProviderProps } from './interfaces'
 
 // main context
@@ -37,14 +36,10 @@ const MainProvider = ({ children }: MainProviderProps) => {
   // render
   return (
     <MainContext.Provider
-      value={{
-        loaded,
-        viewport,
-        setLoaded,
-      }}
+      value={{ loaded, setLoaded, viewport }}
     >
       <UIProvider>
-        <DataProvider name="kmapp.layers" data={dataLayers.layers}>
+        <DataProvider name="kmapp.layers">
           {children}
         </DataProvider>
       </UIProvider>
