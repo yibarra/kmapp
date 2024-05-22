@@ -55,7 +55,6 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
     )
   }
 
-  const curvesPosition = curves.map(({ curve: [x, y], ...curve}) => ({...curve, curve: [x + (drag?.offset ? drag?.offset[0] : 0), y + (drag?.offset ? drag?.offset[1] : 0) ]}))
   const pointsPosition = points.map(({ x, y, position }) => ({ x: x + (drag?.offset ? drag?.offset[0] : 0), y: y + (drag?.offset ? drag?.offset[1] : 0), position }))
   
   const point = points[props.currentPoint]
@@ -81,7 +80,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
       <Curve
         {...props}
-        curves={curvesPosition}
+        curves={curves}
         points={pointsPosition}
         anchorXY={anchorXY}
         pointXY={pointXY}
@@ -89,7 +88,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
 
       <Points
         {...props}
-        curves={curvesPosition}
+        curves={curves}
         points={pointsPosition}
         radius={radius}
         pointXY={pointXY}
@@ -114,7 +113,7 @@ const Layer = (props: LayerProps & { active?: boolean, index: number }) => {
         <Anchor
           {...props}
           anchorXY={anchorXY}
-          curves={curvesPosition}
+          curves={curves}
           pointXY={pointXY}
           points={pointsPosition}
           setAnchorXY={setAnchorXY}

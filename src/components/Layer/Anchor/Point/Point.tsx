@@ -7,15 +7,15 @@ import { UIContext } from '../../../../providers/UIProvider/UIProvider'
 import { ViewportContext } from '../../../../providers/ViewportProvider/ViewportProvider'
 import type { PointAnchorProps } from './interfaces'
 
-const Point = ({ curve, index, pointInit, pointEnd, setAnchorXY, size }: PointAnchorProps) => {
+const Point = ({ curve, index, setAnchorXY, size }: PointAnchorProps) => {
   const pointRef = useRef(null)
 
   const { properties } = useContext(ViewportContext)
   const { setIsAnchor } = useContext(UIContext)
-  const { updateLayerCurvePoint } = useContext(LayersContext)
+  const { updateLayerPoint } = useContext(LayersContext)
 
   const radius = (size / 2) - 2
-  const posXY = [curve[0], curve[1]]
+  const posXY = [curve?.x, curve?.y]
 
   // on drag start point
   const onDragStartPoint = (event: KonvaEventObject<DragEvent>) => {
@@ -39,7 +39,7 @@ const Point = ({ curve, index, pointInit, pointEnd, setAnchorXY, size }: PointAn
     const y = event.target.y() + properties.drag.offset[1]
 
     setIsAnchor(false)
-    updateLayerCurvePoint(index, pointInit, pointEnd, [x, y])
+    updateLayerPoint({ position: curve?.position ?? 0, x, y}, curve?.position ?? 0)
   }
 
   // render

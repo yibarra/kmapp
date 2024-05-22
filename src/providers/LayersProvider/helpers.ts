@@ -9,18 +9,12 @@ export const getPointByPosition = (
 }
 
 // get curve exist
-export const getCurveExist = (curves: CurveType[], pointInit: number, pointEnd: number): boolean => {
+export const getCurveExist = (curves: CurveType[], pointCurve: number): boolean => {
   if (!Array.isArray(curves) || !curves.length) {
     return false
   }
 
-  return curves.filter(
-    (curve: CurveType) => {
-      return (
-        (curve.pointEnd === pointInit && curve.pointInit === pointInit) ||
-        (curve.pointEnd === pointEnd && curve.pointInit === pointEnd)
-      )
-    }).length > 0
+  return curves.filter((curve) => curve.curve === pointCurve || curve.pointInit === pointCurve || curve.pointEnd === pointCurve).length > 0
 }
 
 // get point exist in curve

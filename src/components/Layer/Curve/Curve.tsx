@@ -64,7 +64,7 @@ const Curve = ({
 
       if (pointInit && pointEnd) {
         const pointCurveInit = [pointInit.x, pointInit.y]
-        const [xC, yC] = curve.curve
+        const pointCurve = points[curve.curve]
 
         if (pointCurveInit) {
           if (active && isDragging && pointInit.position === currentPoint) {
@@ -73,7 +73,7 @@ const Curve = ({
             context.moveTo(pointCurveInit[0], pointCurveInit[1])
           }
 
-          setPoint(context, { pointEnd, xy: [xC, yC] }, k)
+          setPoint(context, { pointEnd, xy: [pointCurve.x, pointCurve.y] }, k)
         }
       }
     }

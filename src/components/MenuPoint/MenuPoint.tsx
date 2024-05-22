@@ -44,9 +44,7 @@ const MenuPoint = () => {
             top: point.y + offset[1]
           }}
         >
-          <button
-            onClick={() => createCurve()}
-          >cc</button>
+          <button onClick={() => createCurve()}>cc</button>
           <button>at</button>
           <button>ai</button>
           <button>h - v</button>

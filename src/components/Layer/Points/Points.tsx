@@ -57,7 +57,11 @@ const Points = ({
         const anchor = curves.find((cur) => cur.pointEnd === point.position || cur.pointInit === point.position)
 
         if (anchor) {
-          setAnchorXY({ x: anchor.curve[0], y: anchor.curve[1] })
+          const pointCurve = points.find((value) => value.position === anchor.curve)
+
+          if (pointCurve) {
+            setAnchorXY({ x: pointCurve.x, y: pointCurve?.y })
+          }
         }
 
         setPointXY({ ...point })

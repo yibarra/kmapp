@@ -94,13 +94,13 @@ const Anchor = ({ anchorXY, currentPoint, curves, points, pointXY, setAnchorXY }
         const pointEnd = points.find((p) => p.position === curve.pointEnd)
 
         if (pointInit && pointEnd) {
-          const curvePos = curve.curve
+          const curvePos = points.find((value) => value.position === curve.curve)
 
           if (curvePos) {
             const anchors = (k === anchorXY.index)
 
-            createLineAnchor(context, shape, curvePos, pointInit, anchors) // line init
-            createLineAnchor(context, shape, curvePos, pointEnd, anchors) // line end
+            createLineAnchor(context, shape, [curvePos.x, curvePos.y], pointInit, anchors) // line init
+            createLineAnchor(context, shape, [curvePos.x, curvePos.y], pointEnd, anchors) // line end
           }
         }
       }
@@ -120,6 +120,7 @@ const Anchor = ({ anchorXY, currentPoint, curves, points, pointXY, setAnchorXY }
       {Array.isArray(curves) && curves.map((curve, key) => (
         <Point
           {...curve}
+          curve={points.find((v) => v.position === curve.curve)}
           index={key}
           key={key}
           size={sizeBox}

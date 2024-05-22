@@ -92,16 +92,12 @@ export const dataLayers = {
       ],
       "curves": [{
         pointInit: 0,
-        pointEnd: 1,
-        curve: [15, 65]
+        pointEnd: 2,
+        curve: 1
       }, {
-        pointInit: 6,
-        pointEnd: 7,
-        curve: [500, 400]
-      }, {
-        pointInit: 10,
+        pointInit: 9,
         pointEnd: 11,
-        curve: [700, 600]
+        curve: 10
       }],
       "drag": {
         "offset": [0, 0],
@@ -219,9 +215,9 @@ export const dataLayers = {
         }
       ],
       "curves": [{
-        pointInit: 1,
+        pointInit: 0,
         pointEnd: 2,
-        curve: [130, 140]
+        curve: 1
       }],
       "drag": {
         "offset": [0, 0],

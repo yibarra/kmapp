@@ -26,7 +26,7 @@ const Line = ({
     let pointInitial = false
 
     const element = curves.filter((item: CurveType) => {
-      if (item.pointEnd === index || item.pointInit === index) {
+      if (item.pointEnd === index || item.pointInit === index || item.curve === index) {
         if (item.pointInit === index) {
           translate = true
         }

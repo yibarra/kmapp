@@ -1,7 +1,7 @@
 import type { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 
 export type CurveType = {
-  curve: number[]
+  curve: number
   pointEnd: number
   pointInit: number
 }
@@ -51,7 +51,6 @@ export interface LayersContextProps {
   deleteLayerPoint(index: number): void
   setCurrent: Dispatch<SetStateAction<number | null>>
   updateLayer(index: number, data: LayerProps): void
-  updateLayerCurvePoint(index: number, init: number, end: number, curve: number[]): void
   updateLayerPoint(point: PointTypePosition, index: number): void
 }
 
